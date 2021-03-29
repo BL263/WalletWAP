@@ -13,7 +13,7 @@ class Transactions {
     var amountReduced:Long?=null
     var transactiontime:Date?=null
     @OneToOne
-    var walletFrom:Wallet?=null
+    var walletFrom: Wallet?=null
     @OneToOne
-    var walletTo:Wallet?=null
+    var walletTo: Wallet?=null
 }

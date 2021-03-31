@@ -1,8 +1,10 @@
 package it.walletwap.ewallet.services
 
 import it.walletwap.ewallet.dto.Wallet
+import org.springframework.stereotype.Service
+import java.util.*
 
-
+@Service
 interface WalletService {
     /*
     * Queries the database and returns the WalletDto corresponding to the walletId passed as parameter.
@@ -10,12 +12,12 @@ interface WalletService {
     * Returns null if no wallet is found with the given Id
     */
 
-    fun getWalletById(walletId: Long?): Wallet?
+    fun getWalletById(walletId: Long): Optional<Wallet>?
 
     /*
      * Stores the wallet passed as parameter in the application database
      */
-    fun saveWallet(walletDto: Wallet?): Boolean
+    fun saveWallet(walletDto: Wallet): Boolean
 
     /*
      * Returns an ArrayList with all the Wallet in the database.
@@ -28,5 +30,6 @@ interface WalletService {
      * Throws an exception in case of invalid (negative) walletId
    	 * Returns true if the wallet is deleted, false otherwise
      */
-    fun deleteWallet(walletId: Long?): Boolean?
+    fun deleteWallet(walletId: Long)
+    fun getAllWallets():List<Wallet>?
 }

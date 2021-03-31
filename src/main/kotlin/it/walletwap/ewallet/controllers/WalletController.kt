@@ -1,11 +1,20 @@
 package it.walletwap.ewallet.controllers
 
+import it.walletwap.ewallet.dto.Wallet
 import it.walletwap.ewallet.services.CustomerService
+import it.walletwap.ewallet.services.WalletService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
+import java.util.*
+
 
 @RestController
 @RequestMapping("/wallet")
 class WalletController {
+
+    @Autowired
+    lateinit var walletService: WalletService
+
 
     @PostMapping("/")
     fun wallet(): String {
@@ -14,9 +23,8 @@ class WalletController {
     }
 
     @GetMapping("/{walletId}")
-    fun wallet_id(@PathVariable walletId: Int): String {
-
-        return "getwalletById"
+    fun wallet_id(@PathVariable walletId: Int)  : Optional<Wallet>? {
+            return  walletService.getWalletById(walletId.toLong())
     }
 
     @PostMapping("/{walletId}/transaction")

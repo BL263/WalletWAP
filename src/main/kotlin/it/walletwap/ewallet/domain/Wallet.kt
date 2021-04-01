@@ -9,5 +9,7 @@ class Wallet {
     var id:Long?=null
 
     var amount:Long=0
+    @ManyToOne()
+    var customerId:Customer?=null
 
 }

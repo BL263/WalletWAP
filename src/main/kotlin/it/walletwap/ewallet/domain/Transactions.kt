@@ -8,11 +8,10 @@ class Transactions {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     var id:Long?=null
-    var customerId:Long?=null
-    var amountTransfered:Long?=null
+    var amountTransfered:Long=0
     var transactionTime:Date?=null
     @OneToOne
-    var walletFrom: Wallet?=null
+    var walletFrom: Wallet=Wallet()
     @OneToOne
-    var walletTo: Wallet?=null
+    var walletTo: Wallet=Wallet()
 }

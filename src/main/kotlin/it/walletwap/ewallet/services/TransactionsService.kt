@@ -1,6 +1,8 @@
 package it.walletwap.ewallet.services
 
 import it.walletwap.ewallet.domain.Transactions
+import it.walletwap.ewallet.dto.TransactionsDto
+import java.util.*
 
 
 interface TransactionsService {
@@ -10,12 +12,12 @@ interface TransactionsService {
 	 * Returns null if no transaction is found with the given Id
 	 */
 
-    fun getTransactionById(transactionId: Long?): Transactions?
+    fun getTransactionById(transactionId: Long?): Optional<TransactionsDto>?
 
     /*
      * Stores the transaction passed as parameter in the application database
      */
-    fun saveTransactions(transactionDto: Transactions?): Boolean
+    fun saveTransactions(transactionDto: TransactionsDto?): Boolean
 
     /*
      * Returns an ArrayList with all the Transactions in the database.

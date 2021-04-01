@@ -1,6 +1,7 @@
 package it.walletwap.ewallet.controllers
 
 import it.walletwap.ewallet.domain.Wallet
+import it.walletwap.ewallet.dto.WalletDto
 import it.walletwap.ewallet.services.WalletService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
@@ -22,8 +23,8 @@ class WalletController {
     }
 
     @GetMapping("/{walletId}")
-    fun wallet_id(@PathVariable walletId: Int)  : Optional<Wallet>? {
-            return  walletService.getWalletById(walletId.toLong())
+    fun wallet_id(@PathVariable walletId: Long)  : Optional<WalletDto>? {
+            return  walletService.getWalletById(walletId)
     }
 
     @PostMapping("/{walletId}/transaction")

@@ -10,6 +10,6 @@ class Wallet {
 
     var amount:Long=0
     @ManyToOne()
-    var customerId:Customer?=null
+    lateinit var customerId: Customer
 
 }

@@ -25,13 +25,15 @@ CREATE TABLE IF NOT EXISTS `customer` (
   `email` varchar(255) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `sure_name` varchar(255) DEFAULT NULL,
-  `customer_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `FKjw11xg1tsrq9q199iq388tibt` (`customer_id`),
-  CONSTRAINT `FKjw11xg1tsrq9q199iq388tibt` FOREIGN KEY (`customer_id`) REFERENCES `wallet` (`id`)
+  UNIQUE KEY `UK_dwk6cx0afu8bs9o4t536v1j5v` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Data exporting was unselected.
+-- Dumping data for table ecommerce.customer: ~0 rows (approximately)
+/*!40000 ALTER TABLE `customer` DISABLE KEYS */;
+INSERT IGNORE INTO `customer` (`id`, `delivery_address`, `email`, `name`, `sure_name`) VALUES
+	(1, 'Italy', 'behnam.lotfi@studenti.polito.it', 'Behnam', 'Lotfi');
+/*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 
 -- Dumping structure for table ecommerce.hibernate_sequence
 DROP TABLE IF EXISTS `hibernate_sequence`;
@@ -39,16 +41,19 @@ CREATE TABLE IF NOT EXISTS `hibernate_sequence` (
   `next_val` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Data exporting was unselected.
+-- Dumping data for table ecommerce.hibernate_sequence: ~1 rows (approximately)
+/*!40000 ALTER TABLE `hibernate_sequence` DISABLE KEYS */;
+INSERT IGNORE INTO `hibernate_sequence` (`next_val`) VALUES
+	(1);
+/*!40000 ALTER TABLE `hibernate_sequence` ENABLE KEYS */;
 
 -- Dumping structure for table ecommerce.transactions
 DROP TABLE IF EXISTS `transactions`;
 CREATE TABLE IF NOT EXISTS `transactions` (
   `id` bigint(20) NOT NULL,
-  `amount_added` bigint(20) DEFAULT NULL,
-  `amount_reduced` bigint(20) DEFAULT NULL,
+  `amount_transfered` bigint(20) DEFAULT NULL,
   `customer_id` bigint(20) DEFAULT NULL,
-  `transactiontime` datetime DEFAULT NULL,
+  `transaction_time` datetime DEFAULT NULL,
   `wallet_from_id` bigint(20) DEFAULT NULL,
   `wallet_to_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
@@ -58,17 +63,26 @@ CREATE TABLE IF NOT EXISTS `transactions` (
   CONSTRAINT `FKh18sakxp9u9pt1lxt5rte3pl4` FOREIGN KEY (`wallet_to_id`) REFERENCES `wallet` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Data exporting was unselected.
+-- Dumping data for table ecommerce.transactions: ~0 rows (approximately)
+/*!40000 ALTER TABLE `transactions` DISABLE KEYS */;
+/*!40000 ALTER TABLE `transactions` ENABLE KEYS */;
 
 -- Dumping structure for table ecommerce.wallet
 DROP TABLE IF EXISTS `wallet`;
 CREATE TABLE IF NOT EXISTS `wallet` (
   `id` bigint(20) NOT NULL,
-  `amount` double DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `amount` bigint(20) NOT NULL,
+  `customer_id_id` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `FKtdjkci50tdsrjjwg1ig7u3q1j` (`customer_id_id`),
+  CONSTRAINT `FKtdjkci50tdsrjjwg1ig7u3q1j` FOREIGN KEY (`customer_id_id`) REFERENCES `customer` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Data exporting was unselected.
+-- Dumping data for table ecommerce.wallet: ~0 rows (approximately)
+/*!40000 ALTER TABLE `wallet` DISABLE KEYS */;
+INSERT IGNORE INTO `wallet` (`id`, `amount`, `customer_id_id`) VALUES
+	(1, 200, 1);
+/*!40000 ALTER TABLE `wallet` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;

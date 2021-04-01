@@ -12,10 +12,10 @@ class Customer {
     var sureName:String?=null
     var deliveryAddress:String?=null
     @Column(unique = true)
-    var email:String?=null
+    var email:String=""
 
     @OneToMany(mappedBy="id")
-    private lateinit var wallet: MutableSet<Wallet>
+     lateinit var wallet: MutableSet<Wallet>
 
 }
 

@@ -1,6 +1,6 @@
 package it.walletwap.ewallet.services.Impl
 
-import it.walletwap.ewallet.dto.Wallet
+import it.walletwap.ewallet.domain.Wallet
 import it.walletwap.ewallet.repositories.WalletRepository
 import it.walletwap.ewallet.services.WalletService
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,7 +12,7 @@ class WalletServiceimpl(): WalletService {
     @Autowired
     lateinit var walletRepository: WalletRepository
     override fun getWalletById(walletId: Long): Optional<Wallet>? {
-      
+
        return walletRepository?.findById(walletId)
 
     }

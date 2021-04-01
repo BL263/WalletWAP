@@ -1,4 +1,4 @@
-package it.walletwap.ewallet.dto
+package it.walletwap.ewallet.domain
 
 import javax.persistence.*
 
@@ -7,6 +7,7 @@ class Wallet {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     var id:Long?=null
-    var amount:Double?=null
+
+    var amount:Long=0
 
 }

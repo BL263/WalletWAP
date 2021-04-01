@@ -1,7 +1,6 @@
 package it.walletwap.ewallet.controllers
 
-import it.walletwap.ewallet.dto.Wallet
-import it.walletwap.ewallet.services.CustomerService
+import it.walletwap.ewallet.domain.Wallet
 import it.walletwap.ewallet.services.WalletService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*

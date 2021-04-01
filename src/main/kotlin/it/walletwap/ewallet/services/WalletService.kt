@@ -1,6 +1,6 @@
 package it.walletwap.ewallet.services
 
-import it.walletwap.ewallet.dto.Wallet
+import it.walletwap.ewallet.domain.Wallet
 import org.springframework.stereotype.Service
 import java.util.*
 

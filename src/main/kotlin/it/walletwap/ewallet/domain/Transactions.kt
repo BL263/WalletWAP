@@ -1,4 +1,4 @@
-package it.walletwap.ewallet.dto
+package it.walletwap.ewallet.domain
 
 import java.util.*
 import javax.persistence.*
@@ -9,9 +9,8 @@ class Transactions {
     @GeneratedValue(strategy= GenerationType.AUTO)
     var id:Long?=null
     var customerId:Long?=null
-    var amountAdded:Long?=null
-    var amountReduced:Long?=null
-    var transactiontime:Date?=null
+    var amountTransfered:Long?=null
+    var transactionTime:Date?=null
     @OneToOne
     var walletFrom: Wallet?=null
     @OneToOne

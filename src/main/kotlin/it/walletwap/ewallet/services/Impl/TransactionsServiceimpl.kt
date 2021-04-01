@@ -1,6 +1,6 @@
 package it.walletwap.ewallet.services.Impl
 
-import it.walletwap.ewallet.dto.Transactions
+import it.walletwap.ewallet.domain.Transactions
 import it.walletwap.ewallet.services.TransactionsService
 import org.springframework.stereotype.Service
 

@@ -1,4 +1,4 @@
-package it.walletwap.ewallet.dto
+package it.walletwap.ewallet.domain
 
 import javax.persistence.*
 
@@ -11,10 +11,12 @@ class Customer {
     var name:String?=null
     var sureName:String?=null
     var deliveryAddress:String?=null
+    @Column(unique = true)
     var email:String?=null
 
-    @ManyToOne
-    var customer: Wallet? = null
+    @OneToMany(mappedBy="id")
+    private lateinit var wallet: MutableSet<Wallet>
+
 }
 
 

@@ -1,6 +1,6 @@
 package it.walletwap.ewallet.services
 
-import it.walletwap.ewallet.dto.Transactions
+import it.walletwap.ewallet.domain.Transactions
 
 
 interface TransactionsService {

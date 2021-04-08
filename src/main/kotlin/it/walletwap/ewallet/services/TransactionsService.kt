@@ -17,7 +17,7 @@ interface TransactionsService {
     /*
      * Stores the transaction passed as parameter in the application database
      */
-    fun saveTransactions(transactionDto: TransactionsDto?): Boolean
+    fun saveTransactions(transactionDtoInput: TransactionsDto): Boolean
 
     /*
      * Returns an ArrayList with all the Transactions in the database.

@@ -13,10 +13,10 @@ open class Extensions {
          CustomerDto(this.name ,this.sureName,this.deliveryAddress,this.email)
 
    fun Wallet.toDto():WalletDto =
-        WalletDto(this.amount)
+        WalletDto(this.id,this.amount)
 
     fun List<Wallet>.toDto():List<WalletDto> =
-          this.map { WalletDto(it.amount) };
+          this.map { WalletDto(it.id,it.amount) };
 
 
     fun Transactions.toDto(): TransactionsDto =
@@ -25,7 +25,7 @@ open class Extensions {
 
     fun List<Transactions?>?.toListDto(): List<TransactionsDto>? {
          return  this?.map {
-             TransactionsDto(it?.amountTransfered,it?.walletFrom?.id?:-1,it?.walletTo?.id?:-1)
+             TransactionsDto(it?.amountTransfered?:0,it?.walletFrom?.id?:-1,it?.walletTo?.id?:-1)
          }
     }
 

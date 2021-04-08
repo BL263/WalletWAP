@@ -3,6 +3,7 @@ package it.walletwap.ewallet.services.Impl
 import it.walletwap.ewallet.Extensions
 import it.walletwap.ewallet.domain.Customer
 import it.walletwap.ewallet.domain.Wallet
+import it.walletwap.ewallet.dto.CustomerDto
 import it.walletwap.ewallet.dto.TransactionsDto
 import it.walletwap.ewallet.dto.WalletDto
 import it.walletwap.ewallet.repositories.CustomerRepository
@@ -30,26 +31,29 @@ class WalletServiceimpl(): WalletService ,Extensions(){
         }
     }
 
-    override fun saveWallet(walletDto: WalletDto,walletId: Long,customerId: Long): Boolean {
+    override fun createWallet(customer: CustomerDto): Boolean {
         val wallet=Wallet()
+       val customerId= customerRepository.findByEmail(customer.email)?.id?:-1
         wallet.customerId=(customerRepository.findById(customerId).get() as Customer)
-        wallet.amount=  walletDto.amount
+        wallet.amount= 0
 
         walletRepository?.save(wallet) == wallet
         (customerRepository.findById(customerId).get() as Customer).wallet.add(wallet)
         customerRepository.save ((customerRepository.findById(customerId).get() as Customer) )
         return true
     }
+    override fun saveWallet(wallet:Wallet):Boolean{
 
+        walletRepository.save(wallet)
+        return true
+    }
 
     override val allWallet: List<Any?>?
         get() = TODO("Not yet implemented")
 
     override fun deleteWallet(walletId: Long) {
        val walletfound=  (walletRepository.findById(walletId).get() as Wallet)
-
             walletRepository?.delete(walletfound)
-
     }
 
     override fun getAllWallets( ): List<WalletDto>? =
@@ -59,6 +63,12 @@ class WalletServiceimpl(): WalletService ,Extensions(){
         var wallet = walletRepository.findById(walletId)
        return if(wallet!=null)
         transactionRepository?.findByWalletFromOrWalletTo(wallet.get(),wallet.get()).toListDto()
+        else null
+    }
+    override  fun  getWalletTransaction(walletId: Long,transactionsId: Long): TransactionsDto? {
+        var wallet = walletRepository.findById(walletId)
+        return if(wallet!=null)
+            (transactionRepository?.findByWalletFromOrWalletTo(wallet.get(),wallet.get())?.find {it?.id== transactionsId })?.toDto()
         else null
     }
 }

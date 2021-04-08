@@ -1,6 +1,7 @@
 package it.walletwap.ewallet.services
 
 import it.walletwap.ewallet.domain.Wallet
+import it.walletwap.ewallet.dto.TransactionsDto
 import it.walletwap.ewallet.dto.WalletDto
 import org.springframework.stereotype.Service
 import java.util.*
@@ -33,4 +34,6 @@ interface WalletService {
      */
     fun deleteWallet(walletId: Long)
     fun getAllWallets():List<WalletDto>?
+    /* get transactions into and from a wallet */
+    fun getWalletTransactions(walletId: Long): List<TransactionsDto>?
 }

@@ -1,6 +1,7 @@
 package it.walletwap.ewallet.controllers
 
 import it.walletwap.ewallet.domain.Wallet
+import it.walletwap.ewallet.dto.TransactionsDto
 import it.walletwap.ewallet.dto.WalletDto
 import it.walletwap.ewallet.services.WalletService
 import org.springframework.beans.factory.annotation.Autowired
@@ -28,9 +29,9 @@ class WalletController {
     }
 
     @PostMapping("/{walletId}/transaction")
-    fun transactionbyWalletId(@PathVariable walletId: Int): String {
+    fun transactionbyWalletId(@PathVariable walletId: Long): List<TransactionsDto>? {
 
-        return "transactionByWalletId"
+        return  walletService.getWalletTransactions(walletId)
     }
 
     @GetMapping("/{walletId}/transactions?from=<{dateFrom}>&to=<{dateTo}>")

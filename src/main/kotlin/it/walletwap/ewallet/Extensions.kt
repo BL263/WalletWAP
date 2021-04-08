@@ -21,6 +21,16 @@ open class Extensions {
 
     fun Transactions.toDto(): TransactionsDto =
          TransactionsDto(this.amountTransfered ,this.walletFrom.id?:0,this.walletTo.id?:0)
+
+
+    fun List<Transactions?>?.toListDto(): List<TransactionsDto>? {
+         return  this?.map {
+             TransactionsDto(it?.amountTransfered,it?.walletFrom?.id?:-1,it?.walletTo?.id?:-1)
+         }
+    }
+
     fun <T : Any> T?.toOptional(): Optional<T> = Optional.ofNullable(this)
+
+
 
 }

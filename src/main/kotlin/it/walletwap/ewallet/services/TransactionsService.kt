@@ -32,5 +32,4 @@ interface TransactionsService {
      */
     fun deleteTransactions(transactionId: Int?): Boolean?
 
-
 }

@@ -13,9 +13,8 @@ class Customer {
     var deliveryAddress:String?=null
     @Column(unique = true)
     var email:String=""
-
-    @OneToMany(mappedBy="id")
-     lateinit var wallet: MutableSet<Wallet>
+    @OneToMany(mappedBy="customer_id", targetEntity=Wallet::class,cascade = arrayOf(CascadeType.ALL),fetch = FetchType.LAZY)
+    lateinit var wallet: MutableSet<Wallet>
 
 }
 

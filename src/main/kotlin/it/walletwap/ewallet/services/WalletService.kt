@@ -42,4 +42,5 @@ interface WalletService {
     /* get transactions into and from a wallet */
     fun getWalletTransactions(walletId: Long): List<TransactionsDto>?
     fun getWalletTransaction(walletId: Long, transactionsId: Long): TransactionsDto?
+    fun  transactionsByDate(walletId: Long,startdate:String,endDate:String): List<TransactionsDto?>?
 }

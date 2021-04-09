@@ -9,7 +9,10 @@ class Wallet {
     var id:Long?=null
 
     var amount:Long=0
-    @ManyToOne()
-    lateinit var customerId: Customer
+
+
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "customer_id", nullable = false)
+    lateinit var customer_id: Customer
 
 }

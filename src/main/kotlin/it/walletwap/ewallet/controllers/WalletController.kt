@@ -38,14 +38,10 @@ class WalletController {
         return  transactionService.saveTransactions(TransactionsDto(amount,walletIdFrom,walletId))
     }
 
-    @GetMapping("/{walletId}/transactions?from=<{dateFrom}>&to=<{dateTo}>")
-    fun transactionByWalletIdandDate(
-        @PathVariable walletId: Int,
-        @PathVariable dateFrom: String,
-        @PathVariable dateTo: String
-    ): String {
+    @GetMapping("/{walletId}/transactions")
+    fun transactionByWalletIdandDate(@PathVariable walletId: Long, @RequestParam(name="from", required=false, defaultValue="1617975717827") dateFrom: String, @RequestParam(name="to", required=false, defaultValue="1617975717827")  dateTo: String): List<TransactionsDto?>? {
+        return  walletService.transactionsByDate(walletId,dateFrom,dateTo)
 
-        return "transactionsByDate"
     }
 
     @GetMapping("/{walletId}/transactions/{transactionId}")

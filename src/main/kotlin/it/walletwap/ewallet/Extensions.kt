@@ -1,10 +1,10 @@
 package it.walletwap.ewallet
 
 import it.walletwap.ewallet.domain.Customer
-import it.walletwap.ewallet.domain.Transactions
+import it.walletwap.ewallet.domain.Transaction
 import it.walletwap.ewallet.domain.Wallet
 import it.walletwap.ewallet.dto.CustomerDto
-import it.walletwap.ewallet.dto.TransactionsDto
+import it.walletwap.ewallet.dto.TransactionDto
 import it.walletwap.ewallet.dto.WalletDto
 import java.util.*
 
@@ -19,13 +19,13 @@ open class Extensions {
           this.map { WalletDto(it.id,it.amount) };
 
 
-    fun Transactions.toDto(): TransactionsDto =
-         TransactionsDto(this.amountTransfered ,this.walletFrom.id?:0,this.walletTo.id?:0)
+    fun Transaction.toDto(): TransactionDto =
+         TransactionDto(this.amountTransfered ,this.walletFrom.id?:0,this.walletTo.id?:0)
 
 
-    fun List<Transactions?>?.toListDto(): List<TransactionsDto>? {
+    fun List<Transaction?>?.toListDto(): List<TransactionDto>? {
          return  this?.map {
-             TransactionsDto(it?.amountTransfered?:0,it?.walletFrom?.id?:-1,it?.walletTo?.id?:-1)
+             TransactionDto(it?.amountTransfered?:0,it?.walletFrom?.id?:-1,it?.walletTo?.id?:-1)
          }
     }
 

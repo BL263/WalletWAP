@@ -1,9 +1,7 @@
 package it.walletwap.ewallet.controllers
 
-import it.walletwap.ewallet.domain.Customer
-import it.walletwap.ewallet.domain.Wallet
 import it.walletwap.ewallet.dto.CustomerDto
-import it.walletwap.ewallet.dto.TransactionsDto
+import it.walletwap.ewallet.dto.TransactionDto
 import it.walletwap.ewallet.dto.WalletDto
 import it.walletwap.ewallet.services.TransactionsService
 import it.walletwap.ewallet.services.WalletService
@@ -35,17 +33,17 @@ class WalletController {
 
     @PostMapping("/{walletId}/transaction")
     fun transactionbyWalletId( walletIdFrom: Long, @PathVariable walletId: Long,amount: Long):  Boolean {
-        return  transactionService.saveTransactions(TransactionsDto(amount,walletIdFrom,walletId))
+        return  transactionService.saveTransactions(TransactionDto(amount,walletIdFrom,walletId))
     }
 
     @GetMapping("/{walletId}/transactions")
-    fun transactionByWalletIdandDate(@PathVariable walletId: Long, @RequestParam(name="from", required=false, defaultValue="1617975717827") dateFrom: String, @RequestParam(name="to", required=false, defaultValue="1617975717827")  dateTo: String): List<TransactionsDto?>? {
+    fun transactionByWalletIdandDate(@PathVariable walletId: Long, @RequestParam(name="from", required=false, defaultValue="1617975717827") dateFrom: String, @RequestParam(name="to", required=false, defaultValue="1617975717827")  dateTo: String): List<TransactionDto?>? {
         return  walletService.transactionsByDate(walletId,dateFrom,dateTo)
 
     }
 
     @GetMapping("/{walletId}/transactions/{transactionId}")
-    fun transactionByTransactionID(@PathVariable walletId: Long, @PathVariable transactionId: Long): TransactionsDto?{
+    fun transactionByTransactionID(@PathVariable walletId: Long, @PathVariable transactionId: Long): TransactionDto?{
         return walletService.getWalletTransaction(walletId,transactionId)
     }
 

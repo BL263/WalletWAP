@@ -2,7 +2,7 @@ package it.walletwap.ewallet.services
 
 import it.walletwap.ewallet.domain.Wallet
 import it.walletwap.ewallet.dto.CustomerDto
-import it.walletwap.ewallet.dto.TransactionsDto
+import it.walletwap.ewallet.dto.TransactionDto
 import it.walletwap.ewallet.dto.WalletDto
 import org.springframework.stereotype.Service
 import java.util.*
@@ -40,7 +40,7 @@ interface WalletService {
     fun getAllWallets(): List<WalletDto>?
 
     /* get transactions into and from a wallet */
-    fun getWalletTransactions(walletId: Long): List<TransactionsDto>?
-    fun getWalletTransaction(walletId: Long, transactionsId: Long): TransactionsDto?
-    fun  transactionsByDate(walletId: Long,startdate:String,endDate:String): List<TransactionsDto?>?
+    fun getWalletTransactions(walletId: Long): List<TransactionDto>?
+    fun getWalletTransaction(walletId: Long, transactionsId: Long): TransactionDto?
+    fun  transactionsByDate(walletId: Long,startdate:String,endDate:String): List<TransactionDto?>?
 }

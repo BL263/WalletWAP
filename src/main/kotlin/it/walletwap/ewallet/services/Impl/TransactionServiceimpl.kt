@@ -1,25 +1,22 @@
 package it.walletwap.ewallet.services.Impl
 
 import it.walletwap.ewallet.Extensions
-import it.walletwap.ewallet.domain.Transactions
-import it.walletwap.ewallet.dto.CustomerDto
-import it.walletwap.ewallet.dto.TransactionsDto
-import it.walletwap.ewallet.repositories.CustomerRepository
-import it.walletwap.ewallet.repositories.TransactionsRepository
+import it.walletwap.ewallet.domain.Transaction
+import it.walletwap.ewallet.dto.TransactionDto
+import it.walletwap.ewallet.repositories.TransactionRepository
 import it.walletwap.ewallet.repositories.WalletRepository
 import it.walletwap.ewallet.services.TransactionsService
-import org.aspectj.apache.bcel.Repository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class TransactionsServiceimpl() : TransactionsService,Extensions() {
+class TransactionServiceimpl() : TransactionsService,Extensions() {
     @Autowired
-    lateinit var repositoryTransaction: TransactionsRepository
+    lateinit var repositoryTransaction: TransactionRepository
     @Autowired
     lateinit var repositoryWallet: WalletRepository
-    override fun getTransactionById(transactionId: Long?): Optional<TransactionsDto>? {
+    override fun getTransactionById(transactionId: Long?): Optional<TransactionDto>? {
         if(transactionId!=null){
         var transaction=  repositoryTransaction.findById(transactionId)
         return if(!transaction.isEmpty) {
@@ -31,11 +28,11 @@ class TransactionsServiceimpl() : TransactionsService,Extensions() {
             else return null
     }
 
-    override fun saveTransactions(transactionDtoInput: TransactionsDto): Boolean {
+    override fun saveTransactions(transactionDtoInput: TransactionDto): Boolean {
      val walletFrom=repositoryWallet.findById(transactionDtoInput.walletFromId)
         val walletTo=repositoryWallet.findById(transactionDtoInput.walletToId)
       return  if(walletFrom!= null && walletTo!= null && walletFrom.get().amount>= transactionDtoInput?.amountTransfered) {
-            val transaction= Transactions()
+            val transaction= Transaction()
             transaction.apply {
                 this.amountTransfered=transactionDtoInput?.amountTransfered;
                 this.walletFrom= walletFrom.get();

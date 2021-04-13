@@ -4,7 +4,7 @@ import java.util.*
 import javax.persistence.*
 
 @Entity
-class Transactions {
+class Transaction {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     var id:Long?=null

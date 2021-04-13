@@ -4,10 +4,10 @@ import it.walletwap.ewallet.Extensions
 import it.walletwap.ewallet.domain.Customer
 import it.walletwap.ewallet.domain.Wallet
 import it.walletwap.ewallet.dto.CustomerDto
-import it.walletwap.ewallet.dto.TransactionsDto
+import it.walletwap.ewallet.dto.TransactionDto
 import it.walletwap.ewallet.dto.WalletDto
 import it.walletwap.ewallet.repositories.CustomerRepository
-import it.walletwap.ewallet.repositories.TransactionsRepository
+import it.walletwap.ewallet.repositories.TransactionRepository
 import it.walletwap.ewallet.repositories.WalletRepository
 import it.walletwap.ewallet.services.WalletService
 import org.springframework.beans.factory.annotation.Autowired
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -28,7 +27,7 @@ class WalletServiceimpl(): WalletService ,Extensions(){
     @Autowired
     lateinit var customerRepository:CustomerRepository
     @Autowired
-    lateinit var transactionRepository: TransactionsRepository
+    lateinit var transactionRepository: TransactionRepository
     override fun getWalletById(walletId: Long): Optional<WalletDto>? {
         var wallet=  walletRepository.findById(walletId)
         return if(!wallet.isEmpty) {
@@ -66,19 +65,19 @@ class WalletServiceimpl(): WalletService ,Extensions(){
     override fun getAllWallets( ): List<WalletDto>? =
          walletRepository?.getalllWallets().toDto()
 
-    override  fun  getWalletTransactions(walletId: Long): List<TransactionsDto>? {
+    override  fun  getWalletTransactions(walletId: Long): List<TransactionDto>? {
         var wallet = walletRepository.findById(walletId)
        return if(wallet!=null)
         transactionRepository?.findByWalletFromOrWalletTo(wallet.get(),wallet.get()).toListDto()
         else null
     }
-    override  fun  getWalletTransaction(walletId: Long,transactionsId: Long): TransactionsDto? {
+    override  fun  getWalletTransaction(walletId: Long,transactionsId: Long): TransactionDto? {
         var wallet = walletRepository.findById(walletId)
         return if(wallet!=null)
             (transactionRepository?.findByWalletFromOrWalletTo(wallet.get(),wallet.get())?.find {it?.id== transactionsId })?.toDto()
         else null
     }
-    override  fun  transactionsByDate(walletId: Long,startdate:String,endDate:String): List<TransactionsDto?>? {
+    override  fun  transactionsByDate(walletId: Long,startdate:String,endDate:String): List<TransactionDto?>? {
         var wallet = walletRepository.findById(walletId)
 
 

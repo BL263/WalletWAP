@@ -99,7 +99,7 @@ class WalletServiceimpl(): WalletService ,Extensions(){
         val startTime=Date.from(datefrom.atStartOfDay(ZoneId.systemDefault()).toInstant())
         val endTime=Date.from(dateto.atStartOfDay(ZoneId.systemDefault()).toInstant())
         return if(!wallet.isEmpty)
-            (transactionRepository?.findByWalletFromOrWalletTo(wallet.get(),wallet.get())?.filter { it?.transactionTime?.compareTo(endTime)!! >0 && it?.transactionTime?.compareTo(startTime)!!>0 }).toListDto()
+            (transactionRepository?.findByWalletFromOrWalletTo(wallet.get(),wallet.get())?.filter { it?.transactionTime?.compareTo(endTime)!! <0 && it?.transactionTime?.compareTo(startTime)!!>0 }).toListDto()
         else null
     }
 }

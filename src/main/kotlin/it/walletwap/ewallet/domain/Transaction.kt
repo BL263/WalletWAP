@@ -14,11 +14,11 @@ class Transaction {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
-    @JoinColumn(name = "walletFrom", referencedColumnName = "id")
+    @JoinColumn
     var walletFrom: Wallet = Wallet()
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
-    @JoinColumn(name = "walletTo", referencedColumnName = "id")
+    @JoinColumn
     var walletTo: Wallet = Wallet()
 }

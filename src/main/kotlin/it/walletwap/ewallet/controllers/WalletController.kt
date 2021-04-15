@@ -33,12 +33,12 @@ class WalletController {
     }
 
     @PostMapping("/{walletId}/transaction")
-    fun transactionbyWalletId(walletIdFrom: Long, @PathVariable walletId: Long, amount: Long): Boolean {
+    fun transactionByWalletId(walletIdFrom: Long, @PathVariable walletId: Long, amount: Long): Boolean {
         return transactionService.saveTransactions(TransactionDto(amount, walletIdFrom, walletId))
     }
 
     @GetMapping("/{walletId}/transactions")
-    fun transactionByWalletIdandDate(
+    fun transactionByWalletIdAndDate(
         @PathVariable walletId: Long,
         @RequestParam(
             name = "from",

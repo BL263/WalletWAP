@@ -31,7 +31,7 @@ interface WalletService {
      * Returns an ArrayList with all the Wallet in the database.
      * Returns an empty ArrayList if no wallet is registered in the database
      */
-    val allWallet: List<Any?>?
+    val allWallet: List<Wallet?>?
 
     /*
      * Deletes the wallet with the given Id from the database.
@@ -44,5 +44,5 @@ interface WalletService {
     /* get transactions into and from a wallet */
     fun getWalletTransactions(walletId: Long): List<TransactionDto>?
     fun getWalletTransaction(walletId: Long, transactionsId: Long): TransactionDto?
-    fun transactionsByDate(walletId: Long, startdate: String, endDate: String): List<TransactionDto?>?
+    fun transactionsByDate(walletId: Long, startDate: String, endDate: String): List<TransactionDto?>?
 }

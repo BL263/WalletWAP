@@ -31,41 +31,36 @@ class WalletServiceImpl : WalletService, Extensions() {
     lateinit var transactionRepository: TransactionRepository
     override fun getWalletById(walletId: Long): Optional<WalletDto>? {
         val wallet = walletRepository.findById(walletId)
-        return if (wallet.isPresent) {
-            (wallet.get().toDto()).toOptional()
-        } else {
-            null
-        }
+        return if (wallet.isPresent) (wallet.get().toDto()).toOptional() else null
     }
 
     override fun createWallet(customer: CustomerDto): Boolean {
         val wallet = Wallet()
         val customerId = customerRepository.findByEmail(customer.email)?.id ?: -1
-        wallet.customer = (customerRepository.findById(customerId).get())
+        wallet.customer = customerRepository.findById(customerId).get()
         wallet.amount = 0
 
         walletRepository.save(wallet)
-        (customerRepository.findById(customerId).get()).wallet.add(wallet)
+        customerRepository.findById(customerId).get().wallet.add(wallet)
         customerRepository.save((customerRepository.findById(customerId).get()))
         return true
     }
 
     override fun saveWallet(wallet: Wallet): Boolean {
-
         walletRepository.save(wallet)
         return true
     }
 
-    override val allWallet: List<Any?>?
+    override val allWallet: List<Wallet?>?
         get() = TODO("Not yet implemented")
 
     override fun deleteWallet(walletId: Long) {
-        val walletFound = (walletRepository.findById(walletId).get())
+        val walletFound = walletRepository.findById(walletId).get()
         walletRepository.delete(walletFound)
     }
 
     override fun getAllWallets(): List<WalletDto>? =
-        walletRepository.getalllWallets().toDto()
+        walletRepository.getAllWallets().toDto()
 
     override fun getWalletTransactions(walletId: Long): List<TransactionDto>? {
         val wallet = walletRepository.findById(walletId)
@@ -78,7 +73,7 @@ class WalletServiceImpl : WalletService, Extensions() {
             ?.find { it?.id == transactionsId })?.toDto()
     }
 
-    override fun transactionsByDate(walletId: Long, startdate: String, endDate: String): List<TransactionDto?>? {
+    override fun transactionsByDate(walletId: Long, startDate: String, endDate: String): List<TransactionDto?>? {
         val wallet = walletRepository.findById(walletId)
 
 
@@ -90,7 +85,7 @@ class WalletServiceImpl : WalletService, Extensions() {
 
         // Create a calendar object that will convert the date and time value in milliseconds to date.
         val calendarFrom = Calendar.getInstance()
-        calendarFrom.timeInMillis = startdate.toLong()
+        calendarFrom.timeInMillis = startDate.toLong()
         val dateFrom = LocalDate.parse(formatter.format(calendarFrom.time), formatterDate)
         val calendarTo = Calendar.getInstance()
         calendarTo.timeInMillis = endDate.toLong()

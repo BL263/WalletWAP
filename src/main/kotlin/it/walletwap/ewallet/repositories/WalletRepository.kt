@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface WalletRepository : CrudRepository<Wallet, Long> {
     @Query(value = "select distinct id,amount from Wallet")
-    fun getalllWallets(): List<Wallet>
+    fun getAllWallets(): List<Wallet>
 }

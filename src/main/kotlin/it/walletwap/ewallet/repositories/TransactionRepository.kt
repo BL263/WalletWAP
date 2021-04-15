@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface TransactionRepository : CrudRepository<Transaction, Long> {
-    fun findByWalletFromOrWalletTo(Walletfrom: Wallet, WalletTo: Wallet): List<Transaction?>?
+    fun findByWalletFromOrWalletTo(walletFrom: Wallet, walletTo: Wallet): List<Transaction?>?
 }

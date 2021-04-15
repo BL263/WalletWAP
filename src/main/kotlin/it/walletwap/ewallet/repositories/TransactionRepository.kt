@@ -5,9 +5,7 @@ import it.walletwap.ewallet.domain.Wallet
 import org.springframework.data.repository.CrudRepository
 import org.springframework.stereotype.Repository
 
-
 @Repository
-interface TransactionRepository: CrudRepository<Transaction, Long> {
-
-    fun findByWalletFromOrWalletTo(Walletfrom:Wallet,WalletTo:Wallet): List<Transaction?>?
+interface TransactionRepository : CrudRepository<Transaction, Long> {
+    fun findByWalletFromOrWalletTo(Walletfrom: Wallet, WalletTo: Wallet): List<Transaction?>?
 }

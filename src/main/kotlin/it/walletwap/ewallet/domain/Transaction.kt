@@ -6,12 +6,14 @@ import javax.persistence.*
 @Entity
 class Transaction {
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
-    var id:Long?=null
-    var amountTransfered:Long=0
-    var transactionTime:Date?=null
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    var id: Long? = null
+    var amountTransferred: Long = 0
+    var transactionTime: Date? = null
+
     @OneToOne
-    var walletFrom: Wallet=Wallet()
+    var walletFrom: Wallet = Wallet()
+
     @OneToOne
-    var walletTo: Wallet=Wallet()
+    var walletTo: Wallet = Wallet()
 }

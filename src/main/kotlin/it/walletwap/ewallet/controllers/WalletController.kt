@@ -17,34 +17,47 @@ class WalletController {
 
     @Autowired
     lateinit var walletService: WalletService
+
     @Autowired
     lateinit var transactionService: TransactionsService
 
     @PostMapping("/")
-    fun wallet(model: Model,  customer: CustomerDto ): String {
+    fun wallet(model: Model, customer: CustomerDto): String {
         //   model.addAttribute("amount",wallet.amount)
-        return  walletService.createWallet(customer).toString()
+        return walletService.createWallet(customer).toString()
     }
 
     @GetMapping("/{walletId}")
-    fun wallet_id(@PathVariable walletId: Long)  : Optional<WalletDto>? {
-            return  walletService.getWalletById(walletId)
+    fun walletId(@PathVariable walletId: Long): Optional<WalletDto>? {
+        return walletService.getWalletById(walletId)
     }
 
     @PostMapping("/{walletId}/transaction")
-    fun transactionbyWalletId( walletIdFrom: Long, @PathVariable walletId: Long,amount: Long):  Boolean {
-        return  transactionService.saveTransactions(TransactionDto(amount,walletIdFrom,walletId))
+    fun transactionbyWalletId(walletIdFrom: Long, @PathVariable walletId: Long, amount: Long): Boolean {
+        return transactionService.saveTransactions(TransactionDto(amount, walletIdFrom, walletId))
     }
 
     @GetMapping("/{walletId}/transactions")
-    fun transactionByWalletIdandDate(@PathVariable walletId: Long, @RequestParam(name="from", required=false, defaultValue="1617975717827") dateFrom: String, @RequestParam(name="to", required=false, defaultValue="1617975717827")  dateTo: String): List<TransactionDto?>? {
-        return  walletService.transactionsByDate(walletId,dateFrom,dateTo)
+    fun transactionByWalletIdandDate(
+        @PathVariable walletId: Long,
+        @RequestParam(
+            name = "from",
+            required = false,
+            defaultValue = "1617975717827"
+        ) dateFrom: String,
+        @RequestParam(
+            name = "to",
+            required = false,
+            defaultValue = "1617975717827"
+        ) dateTo: String
+    ): List<TransactionDto?>? {
+        return walletService.transactionsByDate(walletId, dateFrom, dateTo)
 
     }
 
     @GetMapping("/{walletId}/transactions/{transactionId}")
-    fun transactionByTransactionID(@PathVariable walletId: Long, @PathVariable transactionId: Long): TransactionDto?{
-        return walletService.getWalletTransaction(walletId,transactionId)
+    fun transactionByTransactionID(@PathVariable walletId: Long, @PathVariable transactionId: Long): TransactionDto? {
+        return walletService.getWalletTransaction(walletId, transactionId)
     }
 
 }

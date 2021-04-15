@@ -20,11 +20,13 @@ interface WalletService {
     /*
      * Stores the wallet passed as parameter in the application database
      */
-    fun saveWallet(wallet:Wallet): Boolean
+    fun saveWallet(wallet: Wallet): Boolean
+
     /*
-       * Stores the wallet passed as parameter in the application database
-       */
-    fun createWallet( customer: CustomerDto): Boolean
+     * Stores the wallet passed as parameter in the application database
+     */
+    fun createWallet(customer: CustomerDto): Boolean
+
     /*
      * Returns an ArrayList with all the Wallet in the database.
      * Returns an empty ArrayList if no wallet is registered in the database
@@ -42,5 +44,5 @@ interface WalletService {
     /* get transactions into and from a wallet */
     fun getWalletTransactions(walletId: Long): List<TransactionDto>?
     fun getWalletTransaction(walletId: Long, transactionsId: Long): TransactionDto?
-    fun  transactionsByDate(walletId: Long,startdate:String,endDate:String): List<TransactionDto?>?
+    fun transactionsByDate(walletId: Long, startdate: String, endDate: String): List<TransactionDto?>?
 }

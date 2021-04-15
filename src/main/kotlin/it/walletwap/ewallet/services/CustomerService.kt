@@ -1,6 +1,5 @@
 package it.walletwap.ewallet.services
 
-import it.walletwap.ewallet.domain.Customer
 import it.walletwap.ewallet.dto.CustomerDto
 import java.util.*
 

@@ -1,4 +1,4 @@
-package it.walletwap.ewallet.services.Impl
+package it.walletwap.ewallet.services.impl
 
 import it.walletwap.ewallet.Extensions
 import it.walletwap.ewallet.domain.Transaction
@@ -11,37 +11,36 @@ import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class TransactionServiceimpl() : TransactionsService,Extensions() {
+class TransactionServiceimpl : TransactionsService,Extensions() {
     @Autowired
     lateinit var repositoryTransaction: TransactionRepository
     @Autowired
     lateinit var repositoryWallet: WalletRepository
     override fun getTransactionById(transactionId: Long?): Optional<TransactionDto>? {
-        if(transactionId!=null){
-        var transaction=  repositoryTransaction.findById(transactionId)
-        return if(transaction.isPresent) {
-            (transaction.get().toDto()).toOptional()
-        } else{
-            null
-        }
-        }
-            else return null
+        return if(transactionId!=null){
+            val transaction=  repositoryTransaction.findById(transactionId)
+            if(transaction.isPresent) {
+                (transaction.get().toDto()).toOptional()
+            } else{
+                null
+            }
+        } else null
     }
 
     override fun saveTransactions(transactionDtoInput: TransactionDto): Boolean {
      val walletFrom=repositoryWallet.findById(transactionDtoInput.walletFromId)
         val walletTo=repositoryWallet.findById(transactionDtoInput.walletToId)
-      return  if(walletFrom!= null && walletTo!= null && walletFrom.get().amount>= transactionDtoInput?.amountTransfered) {
+      return  if(walletFrom.get().amount>= transactionDtoInput.amountTransferred) {
             val transaction= Transaction()
             transaction.apply {
-                this.amountTransfered=transactionDtoInput?.amountTransfered;
-                this.walletFrom= walletFrom.get();
-                this.walletTo= walletTo.get();
+                this.amountTransferred= transactionDtoInput.amountTransferred
+                this.walletFrom= walletFrom.get()
+                this.walletTo= walletTo.get()
                 this.transactionTime=Date()
             }
             repositoryTransaction.save(transaction)
-          walletFrom.get().amount=walletFrom.get().amount-transactionDtoInput?.amountTransfered
-          walletTo.get().amount=walletTo.get().amount+transactionDtoInput?.amountTransfered
+          walletFrom.get().amount=walletFrom.get().amount- transactionDtoInput.amountTransferred
+          walletTo.get().amount=walletTo.get().amount+ transactionDtoInput.amountTransferred
             repositoryWallet.save(walletFrom.get())
             repositoryWallet.save(walletTo.get())
             return true

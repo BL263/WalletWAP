@@ -1,5 +1,6 @@
 package it.walletwap.ewallet.domain
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import java.util.*
 import javax.persistence.*
 
@@ -11,9 +12,13 @@ class Transaction {
     var amountTransferred: Long = 0
     var transactionTime: Date? = null
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
+    @JoinColumn(name = "walletFrom", referencedColumnName = "id")
     var walletFrom: Wallet = Wallet()
 
-    @OneToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
+    @JoinColumn(name = "walletTo", referencedColumnName = "id")
     var walletTo: Wallet = Wallet()
 }

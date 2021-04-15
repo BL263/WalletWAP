@@ -19,7 +19,7 @@ class TransactionServiceimpl() : TransactionsService,Extensions() {
     override fun getTransactionById(transactionId: Long?): Optional<TransactionDto>? {
         if(transactionId!=null){
         var transaction=  repositoryTransaction.findById(transactionId)
-        return if(!transaction.isEmpty) {
+        return if(transaction.isPresent) {
             (transaction.get().toDto()).toOptional()
         } else{
             null

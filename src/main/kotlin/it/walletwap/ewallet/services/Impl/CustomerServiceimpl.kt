@@ -16,11 +16,7 @@ class CustomerServiceimpl() : CustomerService , Extensions() {
     lateinit var repository: CustomerRepository
     override fun getCustomerById(customerId: Long): Optional<CustomerDto>? {
         var customer=  repository.findById(customerId)
-        return if(!customer.isEmpty) {
-            (customer.get().toDto()).toOptional()
-        } else{
-            null
-        }
+        return if(customer.isPresent) customer.get().toDto().toOptional() else null
     }
 
 

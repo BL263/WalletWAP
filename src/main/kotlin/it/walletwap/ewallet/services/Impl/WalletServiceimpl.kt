@@ -30,7 +30,7 @@ class WalletServiceimpl(): WalletService ,Extensions(){
     lateinit var transactionRepository: TransactionRepository
     override fun getWalletById(walletId: Long): Optional<WalletDto>? {
         var wallet=  walletRepository.findById(walletId)
-        return if(!wallet.isEmpty) {
+        return if(wallet.isPresent) {
             (wallet.get().toDto()).toOptional()
         } else{
             null
@@ -98,7 +98,7 @@ class WalletServiceimpl(): WalletService ,Extensions(){
 
         val startTime=Date.from(datefrom.atStartOfDay(ZoneId.systemDefault()).toInstant())
         val endTime=Date.from(dateto.atStartOfDay(ZoneId.systemDefault()).toInstant())
-        return if(!wallet.isEmpty)
+        return if(wallet.isPresent)
             (transactionRepository?.findByWalletFromOrWalletTo(wallet.get(),wallet.get())?.filter { it?.transactionTime?.compareTo(endTime)!! <0 && it?.transactionTime?.compareTo(startTime)!!>0 }).toListDto()
         else null
     }

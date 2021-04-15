@@ -20,7 +20,7 @@ import java.util.*
 
 
 @Service
-class WalletServiceimpl : WalletService, Extensions() {
+class WalletServiceImpl : WalletService, Extensions() {
     @Autowired
     lateinit var walletRepository: WalletRepository
 

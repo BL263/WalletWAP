@@ -92,7 +92,7 @@ class WalletServiceimpl(): WalletService ,Extensions(){
         calendarFrom.timeInMillis = startdate.toLong()
         val datefrom= LocalDate.parse(formatter.format(calendarFrom.time),formatterdate)
         val calendarTo = Calendar.getInstance()
-        calendarTo.timeInMillis = startdate.toLong()
+        calendarTo.timeInMillis = endDate.toLong()
         val dateto= LocalDate.parse(formatter.format(calendarTo.time),formatterdate)
 
 

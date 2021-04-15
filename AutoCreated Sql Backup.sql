@@ -32,7 +32,8 @@ CREATE TABLE IF NOT EXISTS `customer` (
 -- Dumping data for table ecommerce.customer: ~0 rows (approximately)
 /*!40000 ALTER TABLE `customer` DISABLE KEYS */;
 INSERT IGNORE INTO `customer` (`id`, `delivery_address`, `email`, `name`, `sure_name`) VALUES
-	(1, 'Italy', 'behnam.lotfi@studenti.polito.it', 'Behnam', 'Lotfi');
+	(1, 'Italy', 'behnam263@gmail.com', 'behnam', 'Lotfi'),
+	(2, 'Italy', 'behnam.lotfi@studenti.polito.it', 'behi', 'behnam');
 /*!40000 ALTER TABLE `customer` ENABLE KEYS */;
 
 -- Dumping structure for table ecommerce.hibernate_sequence
@@ -47,41 +48,46 @@ INSERT IGNORE INTO `hibernate_sequence` (`next_val`) VALUES
 	(1);
 /*!40000 ALTER TABLE `hibernate_sequence` ENABLE KEYS */;
 
--- Dumping structure for table ecommerce.transactions
-DROP TABLE IF EXISTS `transactions`;
-CREATE TABLE IF NOT EXISTS `transactions` (
+-- Dumping structure for table ecommerce.transaction
+DROP TABLE IF EXISTS `transaction`;
+CREATE TABLE IF NOT EXISTS `transaction` (
   `id` bigint(20) NOT NULL,
-  `amount_transfered` bigint(20) DEFAULT NULL,
-  `customer_id` bigint(20) DEFAULT NULL,
+  `amount_transfered` bigint(20) NOT NULL,
   `transaction_time` datetime DEFAULT NULL,
   `wallet_from_id` bigint(20) DEFAULT NULL,
   `wallet_to_id` bigint(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `FKearka5aaw19rglfafi64hva4j` (`wallet_from_id`),
-  KEY `FKh18sakxp9u9pt1lxt5rte3pl4` (`wallet_to_id`),
-  CONSTRAINT `FKearka5aaw19rglfafi64hva4j` FOREIGN KEY (`wallet_from_id`) REFERENCES `wallet` (`id`),
-  CONSTRAINT `FKh18sakxp9u9pt1lxt5rte3pl4` FOREIGN KEY (`wallet_to_id`) REFERENCES `wallet` (`id`)
+  KEY `FKtoea4vq9a9bymtgjj0cgtpmpg` (`wallet_from_id`),
+  KEY `FK9vb8ig3isk3eder7utbi8h42u` (`wallet_to_id`),
+  CONSTRAINT `FK9vb8ig3isk3eder7utbi8h42u` FOREIGN KEY (`wallet_to_id`) REFERENCES `wallet` (`id`),
+  CONSTRAINT `FKtoea4vq9a9bymtgjj0cgtpmpg` FOREIGN KEY (`wallet_from_id`) REFERENCES `wallet` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
--- Dumping data for table ecommerce.transactions: ~0 rows (approximately)
-/*!40000 ALTER TABLE `transactions` DISABLE KEYS */;
-/*!40000 ALTER TABLE `transactions` ENABLE KEYS */;
+-- Dumping data for table ecommerce.transaction: ~0 rows (approximately)
+/*!40000 ALTER TABLE `transaction` DISABLE KEYS */;
+INSERT IGNORE INTO `transaction` (`id`, `amount_transfered`, `transaction_time`, `wallet_from_id`, `wallet_to_id`) VALUES
+	(1, 200, '2021-03-15 10:36:15', 1, 2),
+	(2, 300, '2021-02-15 10:38:23', 2, 1),
+	(3, 400, '2021-03-15 10:38:45', 1, 2),
+	(4, 300, '2021-04-15 10:39:08', 2, 1);
+/*!40000 ALTER TABLE `transaction` ENABLE KEYS */;
 
 -- Dumping structure for table ecommerce.wallet
 DROP TABLE IF EXISTS `wallet`;
 CREATE TABLE IF NOT EXISTS `wallet` (
   `id` bigint(20) NOT NULL,
   `amount` bigint(20) NOT NULL,
-  `customer_id_id` bigint(20) DEFAULT NULL,
+  `customer_id` bigint(20) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `FKtdjkci50tdsrjjwg1ig7u3q1j` (`customer_id_id`),
-  CONSTRAINT `FKtdjkci50tdsrjjwg1ig7u3q1j` FOREIGN KEY (`customer_id_id`) REFERENCES `customer` (`id`)
+  KEY `FKpb5ltxtks766lq2b9hgvnr2bq` (`customer_id`),
+  CONSTRAINT `FKpb5ltxtks766lq2b9hgvnr2bq` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- Dumping data for table ecommerce.wallet: ~0 rows (approximately)
 /*!40000 ALTER TABLE `wallet` DISABLE KEYS */;
-INSERT IGNORE INTO `wallet` (`id`, `amount`, `customer_id_id`) VALUES
-	(1, 200, 1);
+INSERT IGNORE INTO `wallet` (`id`, `amount`, `customer_id`) VALUES
+	(1, 1500, 1),
+	(2, 1800, 2);
 /*!40000 ALTER TABLE `wallet` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;

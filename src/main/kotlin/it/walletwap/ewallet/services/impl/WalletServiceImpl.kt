@@ -78,8 +78,11 @@ class WalletServiceImpl : WalletService, Extensions() {
 
     override fun getWalletTransaction(walletId: Long, transactionsId: Long): TransactionDto? {
         val wallet = walletRepository.findById(walletId)
-        return (transactionRepository.findByWalletFromOrWalletTo(wallet.get(), wallet.get())
+        return if(wallet.isPresent)
+         (transactionRepository.findByWalletFromOrWalletTo(wallet.get(), wallet.get())
             ?.find { it?.id == transactionsId })?.toDto()
+        else
+            null
     }
 
     override fun transactionsByDate(walletId: Long, startDate: String, endDate: String): List<TransactionDto?>? {

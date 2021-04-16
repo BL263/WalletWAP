@@ -6,6 +6,7 @@ import it.walletwap.ewallet.domain.Wallet
 import it.walletwap.ewallet.dto.CustomerDto
 import it.walletwap.ewallet.dto.TransactionDto
 import it.walletwap.ewallet.dto.WalletDto
+import java.math.BigDecimal
 import java.util.*
 
 open class Extensions {
@@ -20,7 +21,7 @@ open class Extensions {
 
     fun List<Transaction?>?.toListDto(): List<TransactionDto>? {
         return this?.map {
-            TransactionDto(it?.amountTransferred ?: 0, it?.walletFrom?.id ?: -1, it?.walletTo?.id ?: -1)
+            TransactionDto(it?.amountTransferred ?: BigDecimal.ZERO, it?.walletFrom?.id ?: -1, it?.walletTo?.id ?: -1)
         }
     }
 

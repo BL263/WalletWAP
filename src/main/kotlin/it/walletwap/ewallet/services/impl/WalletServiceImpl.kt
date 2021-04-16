@@ -1,6 +1,7 @@
 package it.walletwap.ewallet.services.impl
 
 import it.walletwap.ewallet.Extensions
+import it.walletwap.ewallet.domain.Transaction
 import it.walletwap.ewallet.domain.Wallet
 import it.walletwap.ewallet.dto.CustomerDto
 import it.walletwap.ewallet.dto.TransactionDto
@@ -11,6 +12,7 @@ import it.walletwap.ewallet.repositories.WalletRepository
 import it.walletwap.ewallet.services.WalletService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -35,15 +37,22 @@ class WalletServiceImpl : WalletService, Extensions() {
     }
 
     override fun createWallet(customer: CustomerDto): Boolean {
-        val wallet = Wallet()
-        val customerId = customerRepository.findByEmail(customer.email)?.id ?: -1
-        wallet.customer = customerRepository.findById(customerId).get()
-        wallet.amount = 0
-
-        walletRepository.save(wallet)
-        customerRepository.findById(customerId).get().wallet.add(wallet)
-        customerRepository.save((customerRepository.findById(customerId).get()))
+        if(customer.email==null)return false
+        val customerId = customerRepository.findByEmail(customer.email!!)?.id ?: -1
+        return if(customerId>=0)
+        {
+            val wallet = Wallet().also {
+                it.customer=customerRepository.findById(customerId).get();
+                it.amount=BigDecimal.ZERO;
+                it.payees=mutableSetOf<Transaction>();
+                it.payers=mutableSetOf<Transaction>();
+            }
+            walletRepository.save(wallet)
+            customerRepository.findById(customerId).get().wallet.add(wallet)
+            customerRepository.save((customerRepository.findById(customerId).get()))
         return true
+        }
+        else false
     }
 
     override fun saveWallet(wallet: Wallet): Boolean {

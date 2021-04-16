@@ -1,11 +1,13 @@
 package it.walletwap.ewallet.domain
 
+import org.hibernate.annotations.GenericGenerator
 import javax.persistence.*
 
 @Entity
 class Customer {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO, generator="seq")
+    @GenericGenerator(name = "seq", strategy="increment")
     var id: Long? = null
     var name: String? = null
     var surname: String? = null

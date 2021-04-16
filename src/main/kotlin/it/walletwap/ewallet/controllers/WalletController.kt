@@ -8,6 +8,7 @@ import it.walletwap.ewallet.services.WalletService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
+import java.math.BigDecimal
 import java.util.*
 
 
@@ -22,9 +23,11 @@ class WalletController {
     lateinit var transactionService: TransactionsService
 
     @PostMapping("/")
-    fun wallet(model: Model, customer: CustomerDto): String {
+    fun wallet(model: Model, customer: CustomerDto=CustomerDto("","","","")): String {
         //   model.addAttribute("amount",wallet.amount)
-        return walletService.createWallet(customer).toString()
+        return  if(customer.email!=null)
+         walletService.createWallet(customer).toString()
+        else  "Problem in parsing input values"
     }
 
     @GetMapping("/{walletId}")
@@ -33,7 +36,7 @@ class WalletController {
     }
 
     @PostMapping("/{walletId}/transaction")
-    fun transactionByWalletId(walletIdFrom: Long, @PathVariable walletId: Long, amount: Long): Boolean {
+    fun transactionByWalletId(walletIdFrom: Long, @PathVariable walletId: Long, amount: BigDecimal): Boolean {
         return transactionService.saveTransactions(TransactionDto(amount, walletIdFrom, walletId))
     }
 

@@ -1,5 +1,8 @@
 package it.walletwap.ewallet.controllers
 
+
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import it.walletwap.ewallet.dto.CustomerDto
 import it.walletwap.ewallet.dto.TransactionDto
 import it.walletwap.ewallet.dto.WalletDto
@@ -9,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
-import java.math.BigDecimal
+import java.io.StringReader
 import java.util.*
 import javax.validation.Valid
 
@@ -41,8 +44,13 @@ class WalletController {
 
     @PostMapping("/{walletId}/transaction")
     @ResponseStatus(HttpStatus.CREATED)
-    fun createTransactionByWalletId(walletIdFrom: Long, @PathVariable walletId: Long, amount: BigDecimal): Boolean {
-        return transactionService.saveTransactions(TransactionDto(amount, walletIdFrom, walletId))
+    fun createTransactionByWalletId(@PathVariable walletId: Long,@RequestBody body:String): Boolean {
+        val item: JsonObject = Gson().fromJson(body, JsonObject::class.java)
+      return  if  (!item.get("amount").isJsonNull && !item.get("walletToId").isJsonNull ) {
+            var transactionDto:TransactionDto = TransactionDto(item.get("amount").asBigDecimal,walletId ,item.get("walletToId").asLong )
+            return transactionService.saveTransactions(transactionDto)
+        }else false
+
     }
 
     @GetMapping("/{walletId}/transactions")

@@ -28,26 +28,33 @@ class TransactionServiceImpl : TransactionsService,Extensions() {
     }
 
     override fun saveTransactions(transactionDtoInput: TransactionDto): Boolean {
-     val walletFrom=repositoryWallet.findById(transactionDtoInput.walletFromId)
-        val walletTo=repositoryWallet.findById(transactionDtoInput.walletToId)
-      return  if(walletFrom.get().amount>= transactionDtoInput.amountTransferred) {
-            val transaction= Transaction()
-            transaction.apply {
-                this.amountTransferred= transactionDtoInput.amountTransferred
-                this.walletFrom= walletFrom.get()
-                this.walletTo= walletTo.get()
-                this.transactionTime=Date()
-            }
-            repositoryTransaction.save(transaction)
-          walletFrom.get().amount=walletFrom.get().amount- transactionDtoInput.amountTransferred
-          walletTo.get().amount=walletTo.get().amount+ transactionDtoInput.amountTransferred
-            repositoryWallet.save(walletFrom.get())
-            repositoryWallet.save(walletTo.get())
-            return true
-        }
-        else false
-    }
 
+        val walletFrom=repositoryWallet.findById(transactionDtoInput.walletFromId)
+        val walletTo=repositoryWallet.findById(transactionDtoInput.walletToId)
+        if (walletFrom.isPresent && walletTo.isPresent) {
+            return if (walletFrom.get().amount >= transactionDtoInput.amountTransferred) {
+                val transaction = Transaction()
+                transaction.apply {
+                    this.amountTransferred = transactionDtoInput.amountTransferred
+                    this.walletFrom = walletFrom.get()
+                    this.walletTo = walletTo.get()
+                    this.transactionTime = Date()
+                }
+                repositoryTransaction.save(transaction)
+                walletFrom.get().amount = walletFrom.get().amount - transactionDtoInput.amountTransferred
+                walletTo.get().amount = walletTo.get().amount + transactionDtoInput.amountTransferred
+                repositoryWallet.save(walletFrom.get())
+                repositoryWallet.save(walletTo.get())
+                return true
+            } else {
+                System.err.println("Payer does not have enough money")
+                return false
+            }
+        }else{
+            System.err.println("One of referenced wallets does not exist")
+            return false
+        }
+    }
 
     override val allTransactions: List<Any?>?
         get() = TODO("Not yet implemented")

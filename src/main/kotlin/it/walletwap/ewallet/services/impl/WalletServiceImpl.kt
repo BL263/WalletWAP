@@ -12,6 +12,7 @@ import it.walletwap.ewallet.repositories.WalletRepository
 import it.walletwap.ewallet.services.WalletService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
 import java.text.DateFormat
 import java.text.SimpleDateFormat
@@ -22,6 +23,7 @@ import java.util.*
 
 
 @Service
+@Transactional
 class WalletServiceImpl : WalletService, Extensions() {
     @Autowired
     lateinit var walletRepository: WalletRepository
@@ -52,7 +54,10 @@ class WalletServiceImpl : WalletService, Extensions() {
             customerRepository.save((customerRepository.findById(customerId).get()))
         return true
         }
-        else false
+        else {
+                System.err.println("Customer does not exist")
+            false
+        }
     }
 
     override fun saveWallet(wallet: Wallet): Boolean {
@@ -81,35 +86,56 @@ class WalletServiceImpl : WalletService, Extensions() {
         return if(wallet.isPresent)
          (transactionRepository.findByWalletFromOrWalletTo(wallet.get(), wallet.get())
             ?.find { it?.id == transactionsId })?.toDto()
-        else
-            null
+        else {
+            System.err.println("Wallet does not exist")
+            return null
+        }
     }
 
     override fun transactionsByDate(walletId: Long, startDate: String, endDate: String): List<TransactionDto?>? {
         val wallet = walletRepository.findById(walletId)
+        if(startDate.isNullOrEmpty())  return listOf<TransactionDto>()
+        if(endDate.isNullOrEmpty())  return listOf<TransactionDto>()
+        var startTime =Date()
+        var endTime  = Date()
+            try {
+            // Create a DateFormatter object for displaying date in specified format.
+            // Create a DateFormatter object for displaying date in specified format.
+            val formatter: DateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm")
+            val formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+            // Create a calendar object that will convert the date and time value in milliseconds to date.
+
+            // Create a calendar object that will convert the date and time value in milliseconds to date.
+            val calendarFrom = Calendar.getInstance()
+            calendarFrom.timeInMillis = startDate.toLong()
+            val dateFrom = LocalDate.parse(formatter.format(calendarFrom.time), formatterDate)
+            val calendarTo = Calendar.getInstance()
+            calendarTo.timeInMillis = endDate.toLong()
+            val dateTo = LocalDate.parse(formatter.format(calendarTo.time), formatterDate)
 
 
-        // Create a DateFormatter object for displaying date in specified format.
-        // Create a DateFormatter object for displaying date in specified format.
-        val formatter: DateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm")
-        val formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
-        // Create a calendar object that will convert the date and time value in milliseconds to date.
+             startTime = Date.from(dateFrom.atStartOfDay(ZoneId.systemDefault()).toInstant())
+             endTime  = Date.from(dateTo.atStartOfDay(ZoneId.systemDefault()).toInstant())
+        }catch (e:Exception){
+            System.err.println("Can not convert the millisecond date")
+            return null
+        }
+        if(startTime==null) {
+            System.err.println("invalid start date")
+            return null
+        }
+        if(endTime==null) {
+            System.err.println("invalid end date")
+            return null
+        }
 
-        // Create a calendar object that will convert the date and time value in milliseconds to date.
-        val calendarFrom = Calendar.getInstance()
-        calendarFrom.timeInMillis = startDate.toLong()
-        val dateFrom = LocalDate.parse(formatter.format(calendarFrom.time), formatterDate)
-        val calendarTo = Calendar.getInstance()
-        calendarTo.timeInMillis = endDate.toLong()
-        val dateTo = LocalDate.parse(formatter.format(calendarTo.time), formatterDate)
-
-
-        val startTime = Date.from(dateFrom.atStartOfDay(ZoneId.systemDefault()).toInstant())
-        val endTime = Date.from(dateTo.atStartOfDay(ZoneId.systemDefault()).toInstant())
         return if (wallet.isPresent)
             (transactionRepository.findByWalletFromOrWalletTo(wallet.get(), wallet.get())
                 ?.filter { it?.transactionTime?.compareTo(endTime)!! < 0 && it.transactionTime?.compareTo(startTime)!! > 0 }).toListDto()
-        else null
+        else {
+            System.err.println("Wallet not found")
+            null
+        }
     }
 }
 

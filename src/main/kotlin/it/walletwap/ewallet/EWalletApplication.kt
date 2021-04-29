@@ -155,7 +155,7 @@ class EWalletApplication :Extensions() {
             userService.registerUser(user1.toDto())
             println(userService.getuserByUserName(user1.username)?.email)
 
-           // sendMessage(user1.email.toString(),"Testing mail sender","Hi this is a test for mail sender")
+            sendMessage(user1.email.toString(),"Testing mail sender","Hi this is a test for mail sender")
 
         }
     }

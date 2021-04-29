@@ -10,6 +10,7 @@ import it.walletwap.ewallet.dto.UserDetailsDTO
 import it.walletwap.ewallet.dto.WalletDTO
 import java.math.BigDecimal
 import java.util.*
+import javax.validation.constraints.Email
 
 open class Extensions {
 
@@ -33,3 +34,15 @@ open class Extensions {
 enum class Rolename {
     CUSTOMER , ADMIN
 }
+
+//Currently located here, move it wherever you rather to
+data class RegisterForm(
+    var username: String,
+    @Email
+    var email: String,
+    var name: String,
+    var surname: String,
+    var address: String,
+    var password: String,
+    var confirmPassword: String
+)

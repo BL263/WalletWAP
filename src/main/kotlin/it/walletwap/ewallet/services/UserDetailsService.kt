@@ -1,6 +1,7 @@
 package it.walletwap.ewallet.services
 
 
+import it.walletwap.ewallet.RegisterForm
 import it.walletwap.ewallet.domain.User
 import it.walletwap.ewallet.dto.UserDetailsDTO
 import java.util.*
@@ -19,7 +20,7 @@ interface UserDetailsService {
     /*
      * Stores the user passed as parameter in the application database
      */
-    fun saveuser(userDetailsDTO: UserDetailsDTO?): Boolean
+    fun saveuser(registerForm: RegisterForm): Boolean
 
     /*
      * Returns an ArrayList with all the users in the database.

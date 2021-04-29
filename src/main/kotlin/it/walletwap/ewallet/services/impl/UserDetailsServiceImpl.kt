@@ -1,9 +1,15 @@
 package it.walletwap.ewallet.services.impl
 
 import it.walletwap.ewallet.Extensions
+import it.walletwap.ewallet.RegisterForm
+import it.walletwap.ewallet.Rolename
+import it.walletwap.ewallet.domain.Customer
 import it.walletwap.ewallet.domain.User
 import it.walletwap.ewallet.dto.UserDetailsDTO
+import it.walletwap.ewallet.repositories.CustomerRepository
+import it.walletwap.ewallet.repositories.TransactionRepository
 import it.walletwap.ewallet.repositories.UserRepository
+import it.walletwap.ewallet.repositories.WalletRepository
 import it.walletwap.ewallet.services.UserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -12,15 +18,18 @@ import javax.transaction.Transactional
 
 @Service
 @Transactional
-class UserDetailsServiceImpl : UserDetailsService,Extensions() {
-	@Autowired
-	lateinit var repositoryUser: UserRepository
+class UserDetailsServiceImpl (val userRepository: UserRepository, val customerRepository: CustomerRepository): UserDetailsService,Extensions() {
+
 	override fun getuserById(userId: Long): Optional<UserDetailsDTO>? {
 		TODO("Not yet implemented")
 	}
 
-	override fun saveuser(userDetailsDTO: UserDetailsDTO?): Boolean {
-		TODO("Not yet implemented")
+	override fun saveuser(registerForm: RegisterForm): Boolean {
+		val user = User(username = registerForm.username, email = registerForm.email, password = registerForm.password, roles = "CUSTOMER")
+		val customer = Customer(name = registerForm.name, surname = registerForm.surname, deliveryAddress = registerForm.address, email = registerForm.email, user = user)
+		userRepository.save(user)
+		customerRepository.save(customer)
+		return true
 	}
 
 	override val allusers: List<Any?>?
@@ -36,7 +45,7 @@ class UserDetailsServiceImpl : UserDetailsService,Extensions() {
 	}
 
 	override fun loadUserByUsername(username: String): UserDetailsDTO {
-	val user=	repositoryUser.findByUsername(username)
+	val user=	userRepository.findByUsername(username)
 		if(user==null) throw UserException("user not found")
 		else
 			return user.toDto()

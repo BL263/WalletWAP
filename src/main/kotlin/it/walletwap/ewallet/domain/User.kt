@@ -5,7 +5,7 @@ import javax.persistence.*
 import javax.validation.constraints.NotBlank
 
 @Entity
-@Table(name = "User")
+@Table(name = "User",indexes = [Index(name = "index", columnList ="username", unique = true)])
 class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator="seq")
@@ -13,8 +13,6 @@ class User {
     var id: Long? = null
     @Column(name = "username",nullable = false)
     @NotBlank(message = "Name is mandatory")
-    //ToDo fix index
-  // @Index(name = "usenname_index", columnList = "username", unique = true)
      var username: String="" //(unique, indexed, nonempty, and validated),
     var password: String? = null
     @Column(unique = true)

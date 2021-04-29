@@ -2,7 +2,8 @@ package it.walletwap.ewallet.services.impl
 
 import it.walletwap.ewallet.Extensions
 import it.walletwap.ewallet.domain.User
-import it.walletwap.ewallet.dto.UserDto
+import it.walletwap.ewallet.dto.UserDetailsDto
+import it.walletwap.ewallet.repositories.UserRepository
 import it.walletwap.ewallet.repositories.WalletRepository
 import it.walletwap.ewallet.services.UserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
@@ -12,12 +13,12 @@ import java.util.*
 @Service
 class UserDetailsServiceImpl : UserDetailsService,Extensions() {
 	@Autowired
-	lateinit var repositoryWallet: WalletRepository
-	override fun getuserById(userId: Long): Optional<UserDto>? {
+	lateinit var repositoryUser: UserRepository
+	override fun getuserById(userId: Long): Optional<UserDetailsDto>? {
 		TODO("Not yet implemented")
 	}
 
-	override fun saveuser(userDto: UserDto?): Boolean {
+	override fun saveuser(userDetailsDto: UserDetailsDto?): Boolean {
 		TODO("Not yet implemented")
 	}
 
@@ -26,6 +27,18 @@ class UserDetailsServiceImpl : UserDetailsService,Extensions() {
 
 	override fun deleteuser(userId: Int?): Boolean? {
 		TODO("Not yet implemented")
+	}
+
+	override fun enableUser(user: User,isEnable:Boolean): Boolean? {
+		user.isEnabled=isEnable
+		return user.isEnabled==isEnable
+	}
+
+	override fun loadUserByUsername(username: String): UserDetailsDto {
+	val user=	repositoryUser.findByUsername(username)
+		if(user==null) throw UserException("user not found")
+		else
+			return user.toDto()
 	}
 
 	override fun getRoleName(user: User):String? {
@@ -59,3 +72,5 @@ class UserDetailsServiceImpl : UserDetailsService,Extensions() {
 
 
 }
+
+class UserException(message:String): Exception(message)

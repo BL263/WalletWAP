@@ -2,7 +2,7 @@ package it.walletwap.ewallet.services
 
 
 import it.walletwap.ewallet.domain.User
-import it.walletwap.ewallet.dto.UserDto
+import it.walletwap.ewallet.dto.UserDetailsDto
 import java.util.*
 
 
@@ -14,12 +14,12 @@ interface UserDetailsService {
 	 * Returns null if no user is found with the given Id
 	 */
 
-    fun getuserById(userId: Long): Optional<UserDto>?
+    fun getuserById(userId: Long): Optional<UserDetailsDto>?
 
     /*
      * Stores the user passed as parameter in the application database
      */
-    fun saveuser(userDto: UserDto?): Boolean
+    fun saveuser(userDetailsDto: UserDetailsDto?): Boolean
 
     /*
      * Returns an ArrayList with all the users in the database.
@@ -33,6 +33,10 @@ interface UserDetailsService {
    	 * Returns true if the user is deleted, false otherwise
      */
     fun deleteuser(userId: Int?): Boolean?
+
+    fun enableUser(user: User,isEnable:Boolean):Boolean?
+
+    fun loadUserByUsername(username:String) : UserDetailsDto
 
     fun getRoleName(user: User):String?
 

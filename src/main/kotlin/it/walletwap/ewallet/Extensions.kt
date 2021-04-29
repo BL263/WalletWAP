@@ -15,7 +15,9 @@ open class Extensions {
 
 
     fun Wallet.toDto(): WalletDTO = WalletDTO(this.id, this.amount)
-    fun User.toDto(): UserDetailsDTO = UserDetailsDTO(username, email,isEnabled,roles!!)
+
+    // TODO load name surname address from repository of customer
+    fun User.toDto(): UserDetailsDTO = UserDetailsDTO(username, email,isEnabled,roles!!,password.toString(),password.toString(),"name","surname","address")
 
     fun List<Wallet>.toDto(): List<WalletDTO> = this.map { WalletDTO(it.id, it.amount) }
 

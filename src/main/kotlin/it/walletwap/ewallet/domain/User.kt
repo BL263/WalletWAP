@@ -21,5 +21,6 @@ class User (
     var isEnabled: Boolean =false, //(set to false by default, which indicates whether the User is enabled
                                    // to perform operations in the Wallet Service),
 
+
     var roles: String? = null
 )

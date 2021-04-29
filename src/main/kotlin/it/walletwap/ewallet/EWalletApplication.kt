@@ -103,6 +103,8 @@ class EWalletApplication :Extensions() {
             println(user1.roles)
 
             println(userService.getRoleName(user1))
+            userService.registerUser(user1.toDto())
+            println(userService.getuserByUserName(user1.username)?.email)
         }
     }
 

@@ -1,11 +1,12 @@
 package it.walletwap.ewallet.services.impl
 
 import it.walletwap.ewallet.Extensions
+import it.walletwap.ewallet.Rolename
+import it.walletwap.ewallet.domain.Customer
 import it.walletwap.ewallet.domain.User
 import it.walletwap.ewallet.dto.UserDetailsDTO
 import it.walletwap.ewallet.repositories.UserRepository
 import it.walletwap.ewallet.services.UserDetailsService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
 import javax.transaction.Transactional
@@ -14,8 +15,8 @@ import javax.transaction.Transactional
 @Transactional
 class UserDetailsServiceImpl(val repositoryUser: UserRepository) : UserDetailsService,Extensions() {
 
-	override fun getuserById(userId: Long): Optional<UserDetailsDTO>? {
-		TODO("Not yet implemented")
+	override fun getuserByUserName(username: String): User? {
+		return repositoryUser.findByUsername("username")
 	}
 
 	override fun saveuser(userDetailsDTO: UserDetailsDTO?): Boolean {
@@ -69,8 +70,29 @@ class UserDetailsServiceImpl(val repositoryUser: UserRepository) : UserDetailsSe
 		return  false
 
 	}
+	override fun registerUser(user: UserDetailsDTO): Optional<UserDetailsDTO>?{
+		if(user.username.isNullOrEmpty()) return null
+		if(user.email.isNullOrEmpty()) return null
+		// if user exists new user can not register
+		if(repositoryUser.findByUsername(user.username.toString())!=null) return null
+		if(user.password!=user.confirmPassword) return null
 
+		val newCustomer= User(null,user.username.toString(),user.password,user.email,false,Rolename.CUSTOMER.name)
+
+		repositoryUser.save(newCustomer)
+		return user.toOptional()
+	}
 
 }
 
-class UserException(message:String): Exception(message)
+
+class UserException : Exception {
+	var errorCode: Int = 300
+		private set
+	constructor(message: String?) : super(message) {}
+	constructor(message: String?, cause: Throwable?) : super(message, cause) {}
+	constructor(message: String?, cause: Throwable?, errorCode: Int) : super(message, cause) {
+
+	}
+
+}

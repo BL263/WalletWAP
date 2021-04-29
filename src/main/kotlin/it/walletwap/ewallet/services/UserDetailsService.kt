@@ -14,7 +14,7 @@ interface UserDetailsService {
 	 * Returns null if no user is found with the given Id
 	 */
 
-    fun getuserById(userId: Long): Optional<UserDetailsDTO>?
+    fun  getuserByUserName(username: String): User?
 
     /*
      * Stores the user passed as parameter in the application database
@@ -43,4 +43,5 @@ interface UserDetailsService {
     fun addRoleName(user: User,roleTobeAdded:String):Boolean?
 
     fun removeRoleName(user: User,roleTobeRemoved:String):Boolean?
+    fun registerUser(user: UserDetailsDTO): Optional<UserDetailsDTO>?
 }

@@ -4,8 +4,8 @@ import it.walletwap.ewallet.Extensions
 import it.walletwap.ewallet.domain.Transaction
 import it.walletwap.ewallet.domain.Wallet
 import it.walletwap.ewallet.dto.CustomerDto
-import it.walletwap.ewallet.dto.TransactionDto
-import it.walletwap.ewallet.dto.WalletDto
+import it.walletwap.ewallet.dto.TransactionDTO
+import it.walletwap.ewallet.dto.WalletDTO
 import it.walletwap.ewallet.repositories.CustomerRepository
 import it.walletwap.ewallet.repositories.TransactionRepository
 import it.walletwap.ewallet.repositories.WalletRepository
@@ -24,16 +24,10 @@ import java.util.*
 
 @Service
 @Transactional
-class WalletServiceImpl : WalletService, Extensions() {
-    @Autowired
-    lateinit var walletRepository: WalletRepository
+class WalletServiceImpl(val walletRepository:WalletRepository,val customerRepository:CustomerRepository,val transactionRepository :TransactionRepository) : WalletService, Extensions() {
 
-    @Autowired
-    lateinit var customerRepository: CustomerRepository
 
-    @Autowired
-    lateinit var transactionRepository: TransactionRepository
-    override fun getWalletById(walletId: Long): Optional<WalletDto>? {
+    override fun getWalletById(walletId: Long): Optional<WalletDTO>? {
         val wallet = walletRepository.findById(walletId)
         return if (wallet.isPresent) (wallet.get().toDto()).toOptional() else null
     }
@@ -43,15 +37,11 @@ class WalletServiceImpl : WalletService, Extensions() {
         val customerId = customerRepository.findByEmail(customer.email!!)?.id ?: -1
         return if(customerId>=0)
         {
-            val wallet = Wallet().also {
-                it.customer=customerRepository.findById(customerId).get();
-                it.amount=BigDecimal.ZERO;
-                it.payees=mutableSetOf<Transaction>();
-                it.payers=mutableSetOf<Transaction>();
-            }
+            val wallet = Wallet(null,BigDecimal.ZERO,customerRepository.findById(customerId).get(),mutableSetOf<Transaction>())
             walletRepository.save(wallet)
-            customerRepository.findById(customerId).get().wallet.add(wallet)
+            customerRepository.findById(customerId).get().wallet= mutableSetOf<Wallet>(wallet)
             customerRepository.save((customerRepository.findById(customerId).get()))
+
         return true
         }
         else {
@@ -73,15 +63,15 @@ class WalletServiceImpl : WalletService, Extensions() {
         walletRepository.delete(walletFound)
     }
 
-    override fun getAllWallets(): List<WalletDto>? =
+    override fun getAllWallets(): List<WalletDTO>? =
         walletRepository.getAllWallets().toDto()
 
-    override fun getWalletTransactions(walletId: Long): List<TransactionDto>? {
+    override fun getWalletTransactions(walletId: Long): List<TransactionDTO>? {
         val wallet = walletRepository.findById(walletId)
         return transactionRepository.findByWalletFromOrWalletTo(wallet.get(), wallet.get()).toListDto()
     }
 
-    override fun getWalletTransaction(walletId: Long, transactionsId: Long): TransactionDto? {
+    override fun getWalletTransaction(walletId: Long, transactionsId: Long): TransactionDTO? {
         val wallet = walletRepository.findById(walletId)
         return if(wallet.isPresent)
          (transactionRepository.findByWalletFromOrWalletTo(wallet.get(), wallet.get())
@@ -92,10 +82,10 @@ class WalletServiceImpl : WalletService, Extensions() {
         }
     }
 
-    override fun transactionsByDate(walletId: Long, startDate: String, endDate: String): List<TransactionDto?>? {
+    override fun transactionsByDate(walletId: Long, startDate: String, endDate: String): List<TransactionDTO?>? {
         val wallet = walletRepository.findById(walletId)
-        if(startDate.isNullOrEmpty())  return listOf<TransactionDto>()
-        if(endDate.isNullOrEmpty())  return listOf<TransactionDto>()
+        if(startDate.isNullOrEmpty())  return listOf<TransactionDTO>()
+        if(endDate.isNullOrEmpty())  return listOf<TransactionDTO>()
         var startTime =Date()
         var endTime  = Date()
             try {

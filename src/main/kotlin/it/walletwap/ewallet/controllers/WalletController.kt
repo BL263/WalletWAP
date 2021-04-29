@@ -4,15 +4,14 @@ package it.walletwap.ewallet.controllers
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import it.walletwap.ewallet.dto.CustomerDto
-import it.walletwap.ewallet.dto.TransactionDto
-import it.walletwap.ewallet.dto.WalletDto
+import it.walletwap.ewallet.dto.TransactionDTO
+import it.walletwap.ewallet.dto.WalletDTO
 import it.walletwap.ewallet.services.TransactionsService
 import it.walletwap.ewallet.services.WalletService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
-import java.io.StringReader
 import java.util.*
 import javax.validation.Valid
 
@@ -38,7 +37,7 @@ class WalletController {
 
     @GetMapping("/{walletId}")
     @ResponseStatus(HttpStatus.OK)
-    fun getWallet(@PathVariable walletId: Long): Optional<WalletDto>? {
+    fun getWallet(@PathVariable walletId: Long): Optional<WalletDTO>? {
         return walletService.getWalletById(walletId)
     }
 
@@ -47,8 +46,8 @@ class WalletController {
     fun createTransactionByWalletId(@PathVariable walletId: Long,@RequestBody body:String): Boolean {
         val item: JsonObject = Gson().fromJson(body, JsonObject::class.java)
       return  if  (!item.get("amount").isJsonNull && !item.get("walletToId").isJsonNull ) {
-            var transactionDto:TransactionDto = TransactionDto(item.get("amount").asBigDecimal,walletId ,item.get("walletToId").asLong )
-            return transactionService.saveTransactions(transactionDto)
+            var transactionDTO:TransactionDTO = TransactionDTO(item.get("amount").asBigDecimal,Date(),walletId ,item.get("walletToId").asLong )
+            return transactionService.saveTransactions(transactionDTO)
         }else false
 
     }
@@ -67,14 +66,14 @@ class WalletController {
             required = false,
             defaultValue = "1617975717827"
         ) dateTo: String
-    ): List<TransactionDto?>? {
+    ): List<TransactionDTO?>? {
         return walletService.transactionsByDate(walletId, dateFrom, dateTo)
 
     }
 
     @GetMapping("/{walletId}/transactions/{transactionId}")
     @ResponseStatus(HttpStatus.OK)
-    fun transactionByTransactionID(@PathVariable walletId: Long, @PathVariable transactionId: Long): TransactionDto? {
+    fun transactionByTransactionID(@PathVariable walletId: Long, @PathVariable transactionId: Long): TransactionDTO? {
         return walletService.getWalletTransaction(walletId, transactionId)
     }
 

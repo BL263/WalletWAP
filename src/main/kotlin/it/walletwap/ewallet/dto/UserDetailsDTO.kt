@@ -1,6 +1,6 @@
 package it.walletwap.ewallet.dto
 
-data class UserDetailsDto(
+data class UserDetailsDTO(
     var username: String?,
     var email: String?,
     var isEnabled: Boolean?,

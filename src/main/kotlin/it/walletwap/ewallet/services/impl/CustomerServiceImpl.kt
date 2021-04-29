@@ -7,9 +7,12 @@ import it.walletwap.ewallet.domain.Wallet
 import it.walletwap.ewallet.dto.CustomerDto
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.math.BigDecimal
 import java.util.*
+import javax.transaction.Transactional
 
 @Service
+@Transactional
 class CustomerServiceImpl : CustomerService, Extensions() {
     @Autowired
     lateinit var repository: CustomerRepository
@@ -24,7 +27,7 @@ class CustomerServiceImpl : CustomerService, Extensions() {
             val customerFound = repository.findByEmail(customerDto.email)
             if (customerFound != null) {
                 customerFound.name = customerDto.name
-                customerFound.wallet = mutableSetOf(Wallet())
+               // customerFound.wallet = mutableSetOf(Wallet(null, BigDecimal.ZERO,customerFound))
                 customerFound.deliveryAddress = customerDto.deliveryAddress
                 customerFound.email = customerDto.email
                 customerFound.surname = customerDto.surname

@@ -1,22 +1,22 @@
 package it.walletwap.ewallet.services
 
-import it.walletwap.ewallet.dto.TransactionDto
+import it.walletwap.ewallet.dto.TransactionDTO
 import java.util.*
 
 
 interface TransactionsService {
     /*
-	 * Queries the database and returns the TransactionDto corresponding to the transactionId passed as parameter.
+	 * Queries the database and returns the TransactionDTO corresponding to the transactionId passed as parameter.
 	 * Throws an exception in case of invalid (negative) transactionId
 	 * Returns null if no transaction is found with the given Id
 	 */
 
-    fun getTransactionById(transactionId: Long?): Optional<TransactionDto>?
+    fun getTransactionById(transactionId: Long?): Optional<TransactionDTO>?
 
     /*
      * Stores the transaction passed as parameter in the application database
      */
-    fun saveTransactions(transactionDtoInput: TransactionDto): Boolean
+    fun saveTransactions(transactionDTOInput: TransactionDTO): Boolean
 
     /*
      * Returns an ArrayList with all the Transaction in the database.

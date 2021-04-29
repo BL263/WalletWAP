@@ -5,26 +5,26 @@ import it.walletwap.ewallet.domain.Transaction
 import it.walletwap.ewallet.domain.User
 import it.walletwap.ewallet.domain.Wallet
 import it.walletwap.ewallet.dto.CustomerDto
-import it.walletwap.ewallet.dto.TransactionDto
-import it.walletwap.ewallet.dto.UserDetailsDto
-import it.walletwap.ewallet.dto.WalletDto
+import it.walletwap.ewallet.dto.TransactionDTO
+import it.walletwap.ewallet.dto.UserDetailsDTO
+import it.walletwap.ewallet.dto.WalletDTO
 import java.math.BigDecimal
 import java.util.*
 
 open class Extensions {
-    fun Customer.toDto(): CustomerDto = CustomerDto(this.name, this.surname, this.deliveryAddress, this.email)
 
-    fun Wallet.toDto(): WalletDto = WalletDto(this.id, this.amount)
-    fun User.toDto(): UserDetailsDto = UserDetailsDto(username, email,isEnabled,roles!!)
 
-    fun List<Wallet>.toDto(): List<WalletDto> = this.map { WalletDto(it.id, it.amount) }
+    fun Wallet.toDto(): WalletDTO = WalletDTO(this.id, this.amount)
+    fun User.toDto(): UserDetailsDTO = UserDetailsDTO(username, email,isEnabled,roles!!)
 
-    fun Transaction.toDto(): TransactionDto =
-        TransactionDto(this.amountTransferred, this.walletFrom.id ?: 0, this.walletTo.id ?: 0)
+    fun List<Wallet>.toDto(): List<WalletDTO> = this.map { WalletDTO(it.id, it.amount) }
 
-    fun List<Transaction?>?.toListDto(): List<TransactionDto>? {
+    fun Transaction.toDto(): TransactionDTO =
+        TransactionDTO(this.amountTransferred,Date(), this.walletFrom.id ?: 0, this.walletTo.id ?: 0)
+
+    fun List<Transaction?>?.toListDto(): List<TransactionDTO>? {
         return this?.map {
-            TransactionDto(it?.amountTransferred ?: BigDecimal.ZERO, it?.walletFrom?.id ?: -1, it?.walletTo?.id ?: -1)
+            TransactionDTO(it?.amountTransferred ?: BigDecimal.ZERO, Date(),it?.walletFrom?.id ?: -1, it?.walletTo?.id ?: -1)
         }
     }
 

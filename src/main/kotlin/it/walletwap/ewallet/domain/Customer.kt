@@ -1,20 +1,22 @@
 package it.walletwap.ewallet.domain
 
+import it.walletwap.ewallet.dto.CustomerDto
 import org.hibernate.annotations.GenericGenerator
 import javax.persistence.*
 
 @Entity
-class Customer {
+@Table(name = "Customer")
+class Customer (
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator="seq")
     @GenericGenerator(name = "seq", strategy="increment")
-    var id: Long? = null
-    var name: String? = null
-    var surname: String? = null
-    var deliveryAddress: String? = null
+    var id: Long? = null,
+    var name: String? = null,
+    var surname: String? = null,
+    var deliveryAddress: String? = null,
 
     @Column(unique = true)
-    var email: String = ""
+    var email: String = "",
 
     @OneToMany(
         mappedBy = "customer",
@@ -22,9 +24,11 @@ class Customer {
         cascade = [CascadeType.ALL],
         fetch = FetchType.LAZY
     )
-    lateinit var wallet: MutableSet<Wallet>
+     var wallet: MutableSet<Wallet>? = null ,
     @OneToOne
-    lateinit var user: User
+     var user: User? = null
+) {
+    fun toDto()=CustomerDto(this.name, this.surname, this.deliveryAddress, this.email)
 }
 
 

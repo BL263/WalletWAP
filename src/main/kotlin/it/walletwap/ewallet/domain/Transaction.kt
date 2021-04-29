@@ -8,22 +8,22 @@ import javax.persistence.*
 import javax.validation.constraints.Min
 
 @Entity
-class Transaction {
+class Transaction (
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator="seq")
     @GenericGenerator(name = "seq", strategy="increment")
-    var id: Long? = null
+    var id: Long? = null,
     @Min(value = 0 )
-    var amountTransferred: BigDecimal = BigDecimal.ZERO
-    var transactionTime: Date? = null
+    var amountTransferred: BigDecimal = BigDecimal.ZERO,
+    var transactionTime: Date? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
     @JoinColumn
-    var walletFrom: Wallet = Wallet()
+    var walletFrom: Wallet,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
     @JoinColumn
-    var walletTo: Wallet = Wallet()
-}
+    var walletTo: Wallet
+)

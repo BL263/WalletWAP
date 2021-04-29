@@ -2,23 +2,24 @@ package it.walletwap.ewallet.services.impl
 
 import it.walletwap.ewallet.Extensions
 import it.walletwap.ewallet.domain.User
-import it.walletwap.ewallet.dto.UserDetailsDto
+import it.walletwap.ewallet.dto.UserDetailsDTO
 import it.walletwap.ewallet.repositories.UserRepository
-import it.walletwap.ewallet.repositories.WalletRepository
 import it.walletwap.ewallet.services.UserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
+import javax.transaction.Transactional
 
 @Service
+@Transactional
 class UserDetailsServiceImpl : UserDetailsService,Extensions() {
 	@Autowired
 	lateinit var repositoryUser: UserRepository
-	override fun getuserById(userId: Long): Optional<UserDetailsDto>? {
+	override fun getuserById(userId: Long): Optional<UserDetailsDTO>? {
 		TODO("Not yet implemented")
 	}
 
-	override fun saveuser(userDetailsDto: UserDetailsDto?): Boolean {
+	override fun saveuser(userDetailsDTO: UserDetailsDTO?): Boolean {
 		TODO("Not yet implemented")
 	}
 
@@ -34,7 +35,7 @@ class UserDetailsServiceImpl : UserDetailsService,Extensions() {
 		return user.isEnabled==isEnable
 	}
 
-	override fun loadUserByUsername(username: String): UserDetailsDto {
+	override fun loadUserByUsername(username: String): UserDetailsDTO {
 	val user=	repositoryUser.findByUsername(username)
 		if(user==null) throw UserException("user not found")
 		else

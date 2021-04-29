@@ -2,20 +2,20 @@ package it.walletwap.ewallet.services
 
 import it.walletwap.ewallet.domain.Wallet
 import it.walletwap.ewallet.dto.CustomerDto
-import it.walletwap.ewallet.dto.TransactionDto
-import it.walletwap.ewallet.dto.WalletDto
+import it.walletwap.ewallet.dto.TransactionDTO
+import it.walletwap.ewallet.dto.WalletDTO
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
 interface WalletService {
     /*
-    * Queries the database and returns the WalletDto corresponding to the walletId passed as parameter.
+    * Queries the database and returns the WalletDTO corresponding to the walletId passed as parameter.
     * Throws an exception in case of invalid (negative) walletId
     * Returns null if no wallet is found with the given Id
     */
 
-    fun getWalletById(walletId: Long): Optional<WalletDto>?
+    fun getWalletById(walletId: Long): Optional<WalletDTO>?
 
     /*
      * Stores the wallet passed as parameter in the application database
@@ -39,10 +39,10 @@ interface WalletService {
    	 * Returns true if the wallet is deleted, false otherwise
      */
     fun deleteWallet(walletId: Long)
-    fun getAllWallets(): List<WalletDto>?
+    fun getAllWallets(): List<WalletDTO>?
 
     /* get transactions into and from a wallet */
-    fun getWalletTransactions(walletId: Long): List<TransactionDto>?
-    fun getWalletTransaction(walletId: Long, transactionsId: Long): TransactionDto?
-    fun transactionsByDate(walletId: Long, startDate: String, endDate: String): List<TransactionDto?>?
+    fun getWalletTransactions(walletId: Long): List<TransactionDTO>?
+    fun getWalletTransaction(walletId: Long, transactionsId: Long): TransactionDTO?
+    fun transactionsByDate(walletId: Long, startDate: String, endDate: String): List<TransactionDTO?>?
 }

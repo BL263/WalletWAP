@@ -12,25 +12,25 @@ import java.util.*
 
 @Service
 class TransactionServiceImpl : TransactionsService,Extensions() {
-    @Autowired
-    lateinit var repositoryTransaction: TransactionRepository
-    @Autowired
-    lateinit var repositoryWallet: WalletRepository
-    override fun getTransactionById(transactionId: Long?): Optional<TransactionDto>? {
-        return if(transactionId!=null){
-            val transaction=  repositoryTransaction.findById(transactionId)
-            if(transaction.isPresent) {
-                (transaction.get().toDto()).toOptional()
-            } else{
-                null
-            }
-        } else null
-    }
+	@Autowired
+	lateinit var repositoryTransaction: TransactionRepository
+	@Autowired
+	lateinit var repositoryWallet: WalletRepository
+	override fun getTransactionById(transactionId: Long?): Optional<TransactionDto>? {
+		return if(transactionId!=null){
+			val transaction=  repositoryTransaction.findById(transactionId)
+			if(transaction.isPresent) {
+				(transaction.get().toDto()).toOptional()
+			} else{
+				null
+			}
+		} else null
+	}
 
-    override fun saveTransactions(transactionDtoInput: TransactionDto): Boolean {
+	override fun saveTransactions(transactionDtoInput: TransactionDto): Boolean {
 
-        val walletFrom=repositoryWallet.findById(transactionDtoInput.walletFromId)
-        val walletTo=repositoryWallet.findById(transactionDtoInput.walletToId)
+		val walletFrom=repositoryWallet.findById(transactionDtoInput.walletFromId)
+		val walletTo=repositoryWallet.findById(transactionDtoInput.walletToId)
         if (walletFrom.isPresent && walletTo.isPresent) {
             return if (walletFrom.get().amount >= transactionDtoInput.amountTransferred) {
                 val transaction = Transaction()
@@ -51,15 +51,15 @@ class TransactionServiceImpl : TransactionsService,Extensions() {
                 return false
             }
         }else{
-            System.err.println("One of referenced wallets does not exist")
-            return false
-        }
-    }
+			System.err.println("One of referenced wallets does not exist")
+			return false
+		}
+	}
 
-    override val allTransactions: List<Any?>?
-        get() = TODO("Not yet implemented")
+	override val allTransactions: List<Any?>?
+		get() = TODO("Not yet implemented")
 
-    override fun deleteTransactions(transactionId: Int?): Boolean? {
-        TODO("Not yet implemented")
-    }
+	override fun deleteTransactions(transactionId: Int?): Boolean? {
+		TODO("Not yet implemented")
+	}
 }

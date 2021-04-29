@@ -6,3 +6,4 @@ data class UserDto(
     var isEnabled: Boolean?,
     var role: String
 )
+

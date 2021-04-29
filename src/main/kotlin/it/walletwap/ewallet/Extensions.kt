@@ -2,9 +2,11 @@ package it.walletwap.ewallet
 
 import it.walletwap.ewallet.domain.Customer
 import it.walletwap.ewallet.domain.Transaction
+import it.walletwap.ewallet.domain.User
 import it.walletwap.ewallet.domain.Wallet
 import it.walletwap.ewallet.dto.CustomerDto
 import it.walletwap.ewallet.dto.TransactionDto
+import it.walletwap.ewallet.dto.UserDto
 import it.walletwap.ewallet.dto.WalletDto
 import java.math.BigDecimal
 import java.util.*
@@ -13,6 +15,7 @@ open class Extensions {
     fun Customer.toDto(): CustomerDto = CustomerDto(this.name, this.surname, this.deliveryAddress, this.email)
 
     fun Wallet.toDto(): WalletDto = WalletDto(this.id, this.amount)
+    fun User.toDto(): UserDto = UserDto(username, email,isEnabled,roles!!)
 
     fun List<Wallet>.toDto(): List<WalletDto> = this.map { WalletDto(it.id, it.amount) }
 

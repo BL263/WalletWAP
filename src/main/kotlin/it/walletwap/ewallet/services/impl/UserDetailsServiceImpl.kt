@@ -1,20 +1,16 @@
 package it.walletwap.ewallet.services.impl
 
 import it.walletwap.ewallet.Extensions
-import it.walletwap.ewallet.domain.Transaction
 import it.walletwap.ewallet.domain.User
-import it.walletwap.ewallet.dto.TransactionDto
 import it.walletwap.ewallet.dto.UserDto
-import it.walletwap.ewallet.repositories.TransactionRepository
 import it.walletwap.ewallet.repositories.WalletRepository
-import it.walletwap.ewallet.services.TransactionsService
-import it.walletwap.ewallet.services.UserService
+import it.walletwap.ewallet.services.UserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class UserServiceImpl : UserService,Extensions() {
+class UserDetailsServiceImpl : UserDetailsService,Extensions() {
 	@Autowired
 	lateinit var repositoryWallet: WalletRepository
 	override fun getuserById(userId: Long): Optional<UserDto>? {

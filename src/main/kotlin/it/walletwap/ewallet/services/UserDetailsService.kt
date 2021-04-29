@@ -6,7 +6,7 @@ import it.walletwap.ewallet.dto.UserDto
 import java.util.*
 
 
-interface UserService {
+interface UserDetailsService {
 
     /*
 	 * Queries the database and returns the userDto corresponding to the userId passed as parameter.

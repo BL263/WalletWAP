@@ -23,7 +23,8 @@ class Customer {
         fetch = FetchType.LAZY
     )
     lateinit var wallet: MutableSet<Wallet>
-
+    @OneToOne
+    lateinit var user: User
 }
 
 

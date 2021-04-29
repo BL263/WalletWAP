@@ -22,14 +22,4 @@ class User {
                                    // to perform operations in the Wallet Service),
 
     var roles: String? = null
-
-    fun getRoleName(){
-
-    }
-    fun addRoleName(){
-
-    }
-    fun removeRoleName(){
-
-    }
 }

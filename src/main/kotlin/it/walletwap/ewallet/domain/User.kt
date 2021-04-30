@@ -1,5 +1,6 @@
 package it.walletwap.ewallet.domain
 
+import it.walletwap.ewallet.dto.UserDetailsDTO
 import org.hibernate.annotations.GenericGenerator
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
@@ -22,4 +23,7 @@ class User(
     // to perform operations in the Wallet Service),
 
     var roles: String? = null
-)
+) {
+    fun toDto(): UserDetailsDTO = UserDetailsDTO(username, email,isEnabled,roles!!,password.toString(),password.toString(),"name","surname","address")
+
+}

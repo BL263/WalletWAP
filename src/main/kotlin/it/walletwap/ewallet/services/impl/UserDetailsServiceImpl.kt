@@ -8,6 +8,7 @@ import it.walletwap.ewallet.dto.UserDetailsDTO
 import it.walletwap.ewallet.repositories.CustomerRepository
 import it.walletwap.ewallet.repositories.UserRepository
 import it.walletwap.ewallet.services.UserDetailsService
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
 import javax.transaction.Transactional
@@ -16,8 +17,9 @@ import javax.transaction.Transactional
 @Transactional
 class UserDetailsServiceImpl(val userRepository: UserRepository,val customerRepository:CustomerRepository) : UserDetailsService,Extensions() {
 
+
     override fun getuserByUserName(username: String): User? {
-        TODO("Not yet implemented")
+       return userRepository.findByUsername(username)
     }
 
     override val allusers: List<Any?>?
@@ -79,6 +81,9 @@ class UserDetailsServiceImpl(val userRepository: UserRepository,val customerRepo
 		val customer = Customer(name = userdto.name, surname = userdto.surname, deliveryAddress = userdto.address, email = userdto.email.toString(), user = user)
 		userRepository.save(user)
 		customerRepository.save(customer)
+
+		val mailService = MailServiceImpl()
+		mailService.sendMessage(userdto.email.toString(),"Registeration successful","Dear ${userdto.name} ${userdto.surname} Thank you for the registration.")
 
 		return userdto.toOptional()
 	}

@@ -51,8 +51,21 @@ class EWalletApplication : Extensions() {
     @Value("\${spring.mail.properties.mail.debug}")
     val mailDebug: String? = null
 
-    @Bean
+
+    fun sendMessage(toMail: String, subject: String, mailBody: String) {
+        var message = SimpleMailMessage()
+        message.setFrom(mailUsername.toString());
+        message.setTo(toMail)
+        message.setSubject(subject)
+        message.setText(mailBody)
+        message.setSentDate(Date())
+        getJavaMailSender()?.send(message)
+
+    }
+
+
     fun getJavaMailSender(): JavaMailSender? {
+
         val mailSender = JavaMailSenderImpl()
         mailSender.host = mailHost
         mailSender.port = mailPort!!
@@ -155,15 +168,16 @@ class EWalletApplication : Extensions() {
             println(userService.getRoleName(user1))
             userService.registerUser(user1.toDto())
             println(userService.getuserByUserName(user1.username)?.email)
-            val notificationimpl = NotificationServiceImpl()
-            val mailServiceImpl = MailServiceImpl()
+
             //TODO inside bean it is difficult to access application context
-            //   mailServiceImpl.sendMessage(user1.email.toString(),"Testing mail sender","Hi this is a test for mail sender")
+            sendMessage(user1.email.toString(), "Testing mail sender", "Hi this is a test for mail sender")
 
         }
     }
 
+
 }
+
 
 
 fun main(args: Array<String>) {

@@ -10,6 +10,7 @@ import it.walletwap.ewallet.services.TransactionsService
 import it.walletwap.ewallet.services.WalletService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import java.util.*
@@ -26,13 +27,10 @@ class WalletController {
     @Autowired
     lateinit var transactionService: TransactionsService
 
-    @PostMapping("/")
+    @PostMapping(path = ["/"], consumes = ["application/x-www-form-urlencoded"])
     @ResponseStatus(HttpStatus.CREATED)
-    fun addWallet(model: Model,@RequestBody @Valid customer: CustomerDto=CustomerDto("","","","")): String {
-        //   model.addAttribute("amount",wallet.amount)
-        return  if(customer.email!=null)
-         walletService.createWallet(customer).toString()
-        else  "Problem in parsing input values"
+    fun addWallet(customerId: Long): WalletDTO? {
+         return walletService.createWallet(customerId)
     }
 
     @GetMapping("/{walletId}")

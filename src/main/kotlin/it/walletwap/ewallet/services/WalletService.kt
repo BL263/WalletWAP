@@ -25,7 +25,7 @@ interface WalletService {
     /*
      * Stores the wallet passed as parameter in the application database
      */
-    fun createWallet(customer: CustomerDto): Boolean
+    fun createWallet(customerId: Long): WalletDTO?
 
     /*
      * Returns an ArrayList with all the Wallet in the database.

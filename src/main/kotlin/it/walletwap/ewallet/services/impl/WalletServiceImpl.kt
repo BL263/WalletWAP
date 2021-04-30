@@ -1,6 +1,7 @@
 package it.walletwap.ewallet.services.impl
 
 import it.walletwap.ewallet.Extensions
+import it.walletwap.ewallet.domain.Customer
 import it.walletwap.ewallet.domain.Transaction
 import it.walletwap.ewallet.domain.Wallet
 import it.walletwap.ewallet.dto.CustomerDto
@@ -32,21 +33,14 @@ class WalletServiceImpl(val walletRepository:WalletRepository,val customerReposi
         return if (wallet.isPresent) (wallet.get().toDto()).toOptional() else null
     }
 
-    override fun createWallet(customer: CustomerDto): Boolean {
-        if(customer.email==null)return false
-        val customerId = customerRepository.findByEmail(customer.email!!)?.id ?: -1
-        return if(customerId>=0)
-        {
-            val wallet = Wallet(null,BigDecimal.ZERO,customerRepository.findById(customerId).get(),mutableSetOf<Transaction>())
-            walletRepository.save(wallet)
-            customerRepository.findById(customerId).get().wallet= mutableSetOf<Wallet>(wallet)
-            customerRepository.save((customerRepository.findById(customerId).get()))
-
-        return true
-        }
-        else {
-                System.err.println("Customer does not exist")
-            false
+    override fun createWallet(customerId: Long): WalletDTO? {
+        if (customerRepository.existsById(customerId)) {
+            val owner: Customer = customerRepository.findById(customerId).get()
+            val wallet = walletRepository.save(Wallet(customer = owner))
+            return wallet.toDto()
+        } else {
+            System.err.println("Customer does not exist")
+            return null
         }
     }
 

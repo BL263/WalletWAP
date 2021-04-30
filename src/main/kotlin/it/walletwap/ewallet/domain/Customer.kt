@@ -25,7 +25,7 @@ class Customer(
         fetch = FetchType.LAZY
     )
     var wallet: MutableSet<Wallet>? = null,
-    @OneToOne(cascade = [CascadeType.ALL])
+    @OneToOne(cascade = [CascadeType.MERGE])
     @JoinColumn(name = "id")
     var user: User? = null
 ) {

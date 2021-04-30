@@ -5,6 +5,7 @@ import it.walletwap.ewallet.Rolename
 import it.walletwap.ewallet.domain.Customer
 import it.walletwap.ewallet.domain.User
 import it.walletwap.ewallet.dto.UserDetailsDTO
+import it.walletwap.ewallet.repositories.CustomerRepository
 import it.walletwap.ewallet.repositories.UserRepository
 import it.walletwap.ewallet.services.UserDetailsService
 import org.springframework.stereotype.Service
@@ -13,7 +14,7 @@ import javax.transaction.Transactional
 
 @Service
 @Transactional
-class UserDetailsServiceImpl(val userRepository: UserRepository,) : UserDetailsService,Extensions() {
+class UserDetailsServiceImpl(val userRepository: UserRepository,val customerRepository:CustomerRepository) : UserDetailsService,Extensions() {
 
     override fun getuserByUserName(username: String): User? {
         TODO("Not yet implemented")
@@ -66,17 +67,20 @@ class UserDetailsServiceImpl(val userRepository: UserRepository,) : UserDetailsS
 		return  false
 
 	}
-	override fun registerUser(user: UserDetailsDTO): Optional<UserDetailsDTO>?{
-		if(user.username.isNullOrEmpty()) return null
-		if(user.email.isNullOrEmpty()) return null
+	override fun registerUser(userdto: UserDetailsDTO): Optional<UserDetailsDTO>?{
+		if(userdto.username.isNullOrEmpty()) return null
+		if(userdto.email.isNullOrEmpty()) return null
 		// if user exists new user can not register
-		if(userRepository.findByUsername(user.username.toString())!=null) return null
-		if(user.password!=user.confirmPassword) return null
+		if(userRepository.findByUsername(userdto.username.toString())!=null) return null
+		if(userdto.password!=userdto.confirmPassword) return null
 
-		val newCustomer= User(null,user.username.toString(),user.password,user.email,false,Rolename.CUSTOMER.name)
 
-		userRepository.save(newCustomer)
-		return user.toOptional()
+		val user = User(username =userdto.username.toString(), email =userdto.email ,isEnabled = false, password = userdto.password, roles = Rolename.CUSTOMER.toString())
+		val customer = Customer(name = userdto.name, surname = userdto.surname, deliveryAddress = userdto.address, email = userdto.email.toString(), user = user)
+		userRepository.save(user)
+		customerRepository.save(customer)
+
+		return userdto.toOptional()
 	}
 
 }

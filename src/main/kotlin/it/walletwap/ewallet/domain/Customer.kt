@@ -25,7 +25,8 @@ class Customer (
         fetch = FetchType.LAZY
     )
      var wallet: MutableSet<Wallet>? = null ,
-    @OneToOne(mappedBy = "username", cascade = [CascadeType.ALL])
+    @OneToOne(cascade = [CascadeType.ALL])
+    @JoinColumn(name = "id")
      var user: User? = null
 ) {
     fun toDto()=CustomerDto(this.name, this.surname, this.deliveryAddress, this.email)

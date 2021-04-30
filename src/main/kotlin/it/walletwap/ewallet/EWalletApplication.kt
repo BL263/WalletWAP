@@ -9,14 +9,15 @@ import it.walletwap.ewallet.repositories.CustomerRepository
 import it.walletwap.ewallet.repositories.TransactionRepository
 import it.walletwap.ewallet.repositories.UserRepository
 import it.walletwap.ewallet.repositories.WalletRepository
-import it.walletwap.ewallet.services.impl.TransactionServiceImpl
-import it.walletwap.ewallet.services.impl.UserDetailsServiceImpl
-import it.walletwap.ewallet.services.impl.WalletServiceImpl
+import it.walletwap.ewallet.services.impl.*
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.JavaMailSenderImpl
@@ -27,43 +28,37 @@ import javax.mail.MessagingException
 
 
 @SpringBootApplication
+@Configuration
 class EWalletApplication :Extensions() {
     @Value("\${spring.mail.host}")
-     val mailHost: String? = null
+    val mailHost: String? = null
+
     @Value("\${spring.mail.port}")
-    val mailPort: Int   ? = null
+    val mailPort: Int? = null
+
     @Value("\${spring.mail.username}")
     val mailUsername: String? = null
+
     @Value("\${spring.mail.password}")
     val mailPassword: String? = null
+
     @Value("\${spring.mail.properties.mail.smtp.auth}")
     val mailAuth: String? = null
+
     @Value("\${spring.mail.properties.mail.smtp.starttls.enable}")
     val mailEnable: String? = null
+
     @Value("\${spring.mail.properties.mail.debug}")
     val mailDebug: String? = null
 
-
-    fun sendMessage ( toMail:String, subject:String, mailBody:String){
-        var message= SimpleMailMessage()
-        message.setFrom(mailUsername.toString());
-        message.setTo(toMail)
-        message.setSubject(subject)
-        message.setText(mailBody)
-        message.setSentDate(Date())
-        getJavaMailSender()?.send(message)
-
-    }
-
-
+    @Bean
     fun getJavaMailSender(): JavaMailSender? {
-
         val mailSender = JavaMailSenderImpl()
         mailSender.host = mailHost
         mailSender.port = mailPort!!
         mailSender.username = mailUsername
         mailSender.password = mailPassword
-        mailSender.protocol="smtp"
+        mailSender.protocol = "smtp"
 
         val javaMailProperties = Properties()
         javaMailProperties["mail.smtp.auth"] = mailAuth
@@ -71,24 +66,19 @@ class EWalletApplication :Extensions() {
         mailSender.javaMailProperties = javaMailProperties
         try {
             mailSender.testConnection()
-        }catch (e: MessagingException){
+        } catch (e: MessagingException) {
             throw e
         }
 
         return mailSender
     }
 
-
     @Bean
-    fun test(
-        customerRepo: CustomerRepository,
-        walletRepo: WalletRepository,
-        transactionRepo: TransactionRepository,
-        userRepo: UserRepository
-    ): CommandLineRunner {
-        return CommandLineRunner {
-            val c1 =
-                Customer(name = "mirco", surname = "vigna", email = "mirco@gmail.com", deliveryAddress = "roveda 29")
+    fun test(customerRepo: CustomerRepository,
+             walletRepo: WalletRepository,
+             transactionRepo: TransactionRepository, userRepo: UserRepository): CommandLineRunner {
+        return CommandLineRunner { val c1 =
+            Customer(name = "mirco", surname = "vigna", email = "mirco@gmail.com", deliveryAddress = "roveda 29")
             val c2 = Customer(
                 name = "andrea",
                 surname = "vottero",
@@ -154,15 +144,22 @@ class EWalletApplication :Extensions() {
             println(userService.getRoleName(user1))
             userService.registerUser(user1.toDto())
             println(userService.getuserByUserName(user1.username)?.email)
-
-            sendMessage(user1.email.toString(),"Testing mail sender","Hi this is a test for mail sender")
+            val notificationimpl=  NotificationServiceImpl()
+            val mailServiceImpl= MailServiceImpl()
+            //TODO inside bean it is difficult to access application context
+         //   mailServiceImpl.sendMessage(user1.email.toString(),"Testing mail sender","Hi this is a test for mail sender")
 
         }
     }
 
+}
 
 
-}
-fun main(args: Array<String>) {
-    runApplication<EWalletApplication>(*args)
-}
+    fun main(args: Array<String>) {
+        val context = runApplication<EWalletApplication>(*args)
+
+    }
+
+
+
+

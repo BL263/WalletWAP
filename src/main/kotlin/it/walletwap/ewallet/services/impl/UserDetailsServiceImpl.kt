@@ -13,7 +13,7 @@ import javax.transaction.Transactional
 
 @Service
 @Transactional
-class UserDetailsServiceImpl(val repositoryUser: UserRepository) : UserDetailsService,Extensions() {
+class UserDetailsServiceImpl(val userRepository: UserRepository,) : UserDetailsService,Extensions() {
 
     override fun getuserByUserName(username: String): User? {
         TODO("Not yet implemented")
@@ -70,12 +70,12 @@ class UserDetailsServiceImpl(val repositoryUser: UserRepository) : UserDetailsSe
 		if(user.username.isNullOrEmpty()) return null
 		if(user.email.isNullOrEmpty()) return null
 		// if user exists new user can not register
-		if(repositoryUser.findByUsername(user.username.toString())!=null) return null
+		if(userRepository.findByUsername(user.username.toString())!=null) return null
 		if(user.password!=user.confirmPassword) return null
 
 		val newCustomer= User(null,user.username.toString(),user.password,user.email,false,Rolename.CUSTOMER.name)
 
-		repositoryUser.save(newCustomer)
+		userRepository.save(newCustomer)
 		return user.toOptional()
 	}
 

@@ -44,5 +44,5 @@ interface UserDetailsService {
     fun addRoleName(user: User,roleTobeAdded:String):Boolean?
 
     fun removeRoleName(user: User,roleTobeRemoved:String):Boolean?
-    fun registerUser(user: UserDetailsDTO): Optional<UserDetailsDTO>?
+    fun getUserById(userId: Long): Optional<UserDetailsDTO>?
 }

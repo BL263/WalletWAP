@@ -20,7 +20,11 @@ import javax.transaction.Transactional
 @Transactional
 class UserDetailsServiceImpl (val userRepository: UserRepository, val customerRepository: CustomerRepository): UserDetailsService,Extensions() {
 
-	override fun getuserById(userId: Long): Optional<UserDetailsDTO>? {
+	override fun getUserById(userId: Long): Optional<UserDetailsDTO>? {
+		TODO("Not yet implemented")
+	}
+
+	override fun getuserByUserName(username: String): User?{
 		TODO("Not yet implemented")
 	}
 

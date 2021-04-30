@@ -144,18 +144,18 @@ class EWalletApplication :Extensions() {
                 )
             )
 
-            println(walletService.transactionsByDate(1, "1615590000000", "1616540400000"))
+            /*println(walletService.transactionsByDate(1, "1615590000000", "1616540400000"))
             val userService = UserDetailsServiceImpl(userRepo)
             userService.addRoleName(user1,Rolename.ADMIN.name)
             println(user1.roles)
             userService.removeRoleName(user1,Rolename.ADMIN.name)
             println(user1.roles)
 
-            println(userService.getRoleName(user1))
+            (println(userService.getRoleName(user1))
             userService.registerUser(user1.toDto())
             println(userService.getuserByUserName(user1.username)?.email)
 
-            sendMessage(user1.email.toString(),"Testing mail sender","Hi this is a test for mail sender")
+            sendMessage(user1.email.toString(),"Testing mail sender","Hi this is a test for mail sender")*/
 
         }
     }

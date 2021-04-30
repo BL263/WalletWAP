@@ -1,10 +1,8 @@
 package it.walletwap.ewallet
 
-import it.walletwap.ewallet.domain.Customer
 import it.walletwap.ewallet.domain.Transaction
 import it.walletwap.ewallet.domain.User
 import it.walletwap.ewallet.domain.Wallet
-import it.walletwap.ewallet.dto.CustomerDto
 import it.walletwap.ewallet.dto.TransactionDTO
 import it.walletwap.ewallet.dto.UserDetailsDTO
 import it.walletwap.ewallet.dto.WalletDTO
@@ -36,3 +34,16 @@ open class Extensions {
 enum class Rolename {
     CUSTOMER , ADMIN
 }
+
+// Handled by UserDetailsDTO instead of custom class as in PDF mentioned
+// Currently located here, move it wherever you rather to
+// data class RegisterForm(
+//    var username: String,
+//    @Email
+//    var email: String,
+//    var name: String,
+//    var surname: String,
+//    var address: String,
+//    var password: String,
+//    var confirmPassword: String
+//)

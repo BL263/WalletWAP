@@ -15,16 +15,12 @@ import javax.transaction.Transactional
 @Transactional
 class UserDetailsServiceImpl(val repositoryUser: UserRepository) : UserDetailsService,Extensions() {
 
-	override fun getuserByUserName(username: String): User? {
-		return repositoryUser.findByUsername("username")
-	}
+    override fun getuserByUserName(username: String): User? {
+        TODO("Not yet implemented")
+    }
 
-	override fun saveuser(userDetailsDTO: UserDetailsDTO?): Boolean {
-		TODO("Not yet implemented")
-	}
-
-	override val allusers: List<Any?>?
-		get() = TODO("Not yet implemented")
+    override val allusers: List<Any?>?
+        get() = TODO("Not yet implemented")
 
 	override fun deleteuser(userId: Int?): Boolean? {
 		TODO("Not yet implemented")
@@ -35,12 +31,12 @@ class UserDetailsServiceImpl(val repositoryUser: UserRepository) : UserDetailsSe
 		return user.isEnabled==isEnable
 	}
 
-	override fun loadUserByUsername(username: String): UserDetailsDTO {
-	val user=	repositoryUser.findByUsername(username)
-		if(user==null) throw UserException("user not found")
-		else
-			return user.toDto()
-	}
+    override fun loadUserByUsername(username: String): UserDetailsDTO {
+        val user = userRepository.findByUsername(username)
+        if (user == null) throw UserException("user not found")
+        else
+            return user.toDto()
+    }
 
 	override fun getRoleName(user: User):String? {
 		return user.roles

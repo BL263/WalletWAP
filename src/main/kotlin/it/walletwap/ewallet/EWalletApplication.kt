@@ -29,7 +29,7 @@ import javax.mail.MessagingException
 
 @SpringBootApplication
 @Configuration
-class EWalletApplication :Extensions() {
+class EWalletApplication : Extensions() {
     @Value("\${spring.mail.host}")
     val mailHost: String? = null
 
@@ -74,20 +74,29 @@ class EWalletApplication :Extensions() {
     }
 
     @Bean
-    fun test(customerRepo: CustomerRepository,
-             walletRepo: WalletRepository,
-             transactionRepo: TransactionRepository, userRepo: UserRepository): CommandLineRunner {
-        return CommandLineRunner { val c1 =
-            Customer(name = "mirco", surname = "vigna", email = "mirco@gmail.com", deliveryAddress = "roveda 29")
+    fun test(
+        customerRepo: CustomerRepository,
+        walletRepo: WalletRepository,
+        transactionRepo: TransactionRepository, userRepo: UserRepository
+    ): CommandLineRunner {
+        return CommandLineRunner {
+            val c1 =
+                Customer(name = "mirco", surname = "vigna", email = "mirco@gmail.com", deliveryAddress = "roveda 29")
             val c2 = Customer(
                 name = "andrea",
                 surname = "vottero",
                 email = "andrea@gmail.com",
                 deliveryAddress = "roveda 29"
             )
-            val c3 = Customer(name = "martina", surname = "mancinelli", email = "martina@gmail.com", deliveryAddress = "roveda 29")
-            val c4 = Customer(name = "irene", surname = "maldera", email = "irene@gmail.com", deliveryAddress = "roveda 29")
-            val user1= User(null,"behnam2","pass","behnam263@gmail.com",true,Rolename.CUSTOMER.name)
+            val c3 = Customer(
+                name = "martina",
+                surname = "mancinelli",
+                email = "martina@gmail.com",
+                deliveryAddress = "roveda 29"
+            )
+            val c4 =
+                Customer(name = "irene", surname = "maldera", email = "irene@gmail.com", deliveryAddress = "roveda 29")
+            val user1 = User(null, "behnam2", "pass", "behnam263@gmail.com", true, Rolename.CUSTOMER.name)
             val c1Dto = c1.toDto()
             val c2Dto = c2.toDto()
             val c3Dto = c3.toDto()
@@ -129,25 +138,27 @@ class EWalletApplication :Extensions() {
             transactionRepo.save(
                 Transaction(
                     null,
-                    BigDecimal(2), formatter.parse("2021-03-15 12:00:00"), walletRepo.findById(3).get(),
+                    BigDecimal(2),
+                    formatter.parse("2021-03-15 12:00:00"),
+                    walletRepo.findById(3).get(),
                     walletRepo.findById(4).get()
                 )
             )
 
             println(walletService.transactionsByDate(1, "1615590000000", "1616540400000"))
-            val userService = UserDetailsServiceImpl(userRepo)
-            userService.addRoleName(user1,Rolename.ADMIN.name)
+            val userService = UserDetailsServiceImpl(userRepo, customerRepo)
+            userService.addRoleName(user1, Rolename.ADMIN.name)
             println(user1.roles)
-            userService.removeRoleName(user1,Rolename.ADMIN.name)
+            userService.removeRoleName(user1, Rolename.ADMIN.name)
             println(user1.roles)
 
             println(userService.getRoleName(user1))
             userService.registerUser(user1.toDto())
             println(userService.getuserByUserName(user1.username)?.email)
-            val notificationimpl=  NotificationServiceImpl()
-            val mailServiceImpl= MailServiceImpl()
+            val notificationimpl = NotificationServiceImpl()
+            val mailServiceImpl = MailServiceImpl()
             //TODO inside bean it is difficult to access application context
-         //   mailServiceImpl.sendMessage(user1.email.toString(),"Testing mail sender","Hi this is a test for mail sender")
+            //   mailServiceImpl.sendMessage(user1.email.toString(),"Testing mail sender","Hi this is a test for mail sender")
 
         }
     }
@@ -155,10 +166,10 @@ class EWalletApplication :Extensions() {
 }
 
 
-    fun main(args: Array<String>) {
-        val context = runApplication<EWalletApplication>(*args)
+fun main(args: Array<String>) {
+    val context = runApplication<EWalletApplication>(*args)
 
-    }
+}
 
 
 

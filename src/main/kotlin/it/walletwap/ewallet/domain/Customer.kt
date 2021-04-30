@@ -6,10 +6,10 @@ import javax.persistence.*
 
 @Entity
 @Table(name = "Customer")
-class Customer (
+class Customer(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO, generator="seq")
-    @GenericGenerator(name = "seq", strategy="increment")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "seq")
+    @GenericGenerator(name = "seq", strategy = "increment")
     var id: Long? = null,
     var name: String? = null,
     var surname: String? = null,
@@ -24,11 +24,12 @@ class Customer (
         cascade = [CascadeType.ALL],
         fetch = FetchType.LAZY
     )
-     var wallet: MutableSet<Wallet>? = null ,
-    @OneToOne
-     var user: User? = null
+    var wallet: MutableSet<Wallet>? = null,
+    @OneToOne(cascade = [CascadeType.ALL])
+    @JoinColumn(name = "id")
+    var user: User? = null
 ) {
-    fun toDto()=CustomerDto(this.name, this.surname, this.deliveryAddress, this.email)
+    fun toDto() = CustomerDto(this.name, this.surname, this.deliveryAddress, this.email)
 }
 
 

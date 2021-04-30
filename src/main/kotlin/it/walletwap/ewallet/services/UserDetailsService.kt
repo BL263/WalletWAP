@@ -14,12 +14,12 @@ interface UserDetailsService {
 	 * Returns null if no user is found with the given Id
 	 */
 
-    fun  getuserByUserName(username: String): User?
+    fun getuserByUserName(username: String): User?
 
     /*
      * Stores the user passed as parameter in the application database
      */
-    fun saveuser(userDetailsDTO: UserDetailsDTO?): Boolean
+    fun registerUser(user: UserDetailsDTO): Optional<UserDetailsDTO>?
 
     /*
      * Returns an ArrayList with all the users in the database.
@@ -34,14 +34,13 @@ interface UserDetailsService {
      */
     fun deleteuser(userId: Int?): Boolean?
 
-    fun enableUser(user: User,isEnable:Boolean):Boolean?
+    fun enableUser(user: User, isEnable: Boolean): Boolean?
 
-    fun loadUserByUsername(username:String) : UserDetailsDTO
+    fun loadUserByUsername(username: String): UserDetailsDTO
 
-    fun getRoleName(user: User):String?
+    fun getRoleName(user: User): String?
 
-    fun addRoleName(user: User,roleTobeAdded:String):Boolean?
+    fun addRoleName(user: User, roleTobeAdded: String): Boolean?
 
-    fun removeRoleName(user: User,roleTobeRemoved:String):Boolean?
-    fun registerUser(user: UserDetailsDTO): Optional<UserDetailsDTO>?
+    fun removeRoleName(user: User, roleTobeRemoved: String): Boolean?
 }

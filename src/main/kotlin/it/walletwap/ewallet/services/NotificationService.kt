@@ -6,5 +6,6 @@ interface NotificationService {
 
     fun createToken(string: String):String?
     fun checkToken(token: String): EmailVerificationToken?
+    fun cleanTokens()
 
 }

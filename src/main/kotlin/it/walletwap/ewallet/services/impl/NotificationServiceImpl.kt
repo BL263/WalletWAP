@@ -3,6 +3,7 @@ import it.walletwap.ewallet.domain.EmailVerificationToken
 import it.walletwap.ewallet.repositories.EmailVerificationTokenRepository
 import it.walletwap.ewallet.services.NotificationService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -25,6 +26,11 @@ class NotificationServiceImpl: NotificationService {
 
     override fun checkToken(token: String): EmailVerificationToken? {
         return (emailVerificationTokenRepository.findEmailVerificationTokenByToken(token))
+    }
+    // every 5 seconds clean db expired tokens
+    @Scheduled(fixedRate = 5000)
+    override fun cleanTokens(){
+        emailVerificationTokenRepository.removeAllEmailVerificationTokenByExpiryDateIsLessThanEqual(Date())
     }
 
 

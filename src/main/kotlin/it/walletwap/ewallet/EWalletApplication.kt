@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.JavaMailSenderImpl
+import org.springframework.scheduling.annotation.EnableScheduling
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.util.*
@@ -28,7 +29,7 @@ import javax.mail.MessagingException
 
 
 @SpringBootApplication
-@Configuration
+@EnableScheduling
 class EWalletApplication : Extensions() {
     @Value("\${spring.mail.host}")
     val mailHost: String? = null

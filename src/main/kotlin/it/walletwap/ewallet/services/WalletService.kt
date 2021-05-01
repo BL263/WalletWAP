@@ -15,7 +15,7 @@ interface WalletService {
     * Returns null if no wallet is found with the given Id
     */
 
-    fun getWalletById(walletId: Long): Optional<WalletDTO>?
+    fun getWalletById(walletId: Long): WalletDTO?
 
     /*
      * Stores the wallet passed as parameter in the application database

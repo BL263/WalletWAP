@@ -28,9 +28,14 @@ import java.util.*
 class WalletServiceImpl(val walletRepository:WalletRepository,val customerRepository:CustomerRepository,val transactionRepository :TransactionRepository) : WalletService, Extensions() {
 
 
-    override fun getWalletById(walletId: Long): Optional<WalletDTO>? {
-        val wallet = walletRepository.findById(walletId)
-        return if (wallet.isPresent) (wallet.get().toDto()).toOptional() else null
+    override fun getWalletById(walletId: Long): WalletDTO? {
+        if (walletRepository.existsById(walletId)){
+            return walletRepository.findById(walletId).get().toDto()
+        } else {
+            System.err.println("Wallet does not exist")
+            return null
+        }
+
     }
 
     override fun createWallet(customerId: Long): WalletDTO? {

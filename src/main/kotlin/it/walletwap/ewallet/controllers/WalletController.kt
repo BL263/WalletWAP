@@ -35,7 +35,7 @@ class WalletController {
 
     @GetMapping("/{walletId}")
     @ResponseStatus(HttpStatus.OK)
-    fun getWallet(@PathVariable walletId: Long): Optional<WalletDTO>? {
+    fun getWallet(@PathVariable walletId: Long): WalletDTO? {
         return walletService.getWalletById(walletId)
     }
 

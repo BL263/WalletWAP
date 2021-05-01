@@ -10,16 +10,16 @@ import javax.validation.Valid
 
 @RestController
 @RequestMapping("/auth")
-class UserController {
+class AuthController {
     @Autowired
     lateinit var userDetailsService: UserDetailsService
 
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    fun addWallet(@RequestBody @Valid registerForm: UserDetailsDTO): String {
-        if (registerForm.password == registerForm.confirmPassword) {
-            return userDetailsService.registerUser(registerForm).toString()
+    fun addWallet(@RequestBody @Valid userDetailsDTO: UserDetailsDTO): String {
+        if (userDetailsDTO.password == userDetailsDTO.confirmPassword) {
+            return userDetailsService.registerUser(userDetailsDTO).toString()
         } else return "Passwords do not match"
 
     }

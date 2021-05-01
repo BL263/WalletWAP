@@ -1,7 +1,11 @@
 package it.walletwap.ewallet.domain
 
+import it.walletwap.ewallet.Rolename
 import it.walletwap.ewallet.dto.UserDetailsDTO
 import org.hibernate.annotations.GenericGenerator
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import java.util.stream.Collectors
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
 
@@ -17,13 +21,30 @@ class User(
     var username: String, //(unique, indexed, nonempty, and validated),
     var password: String? = null,
     @Column(unique = true)
-    @NotBlank(message = "Name is mandatory")
-    var email: String? = null, //   (unique and validated),
+    @NotBlank(message = "Email is mandatory")
+    var email: String, //   (unique and validated),
     var isEnabled: Boolean = false, //(set to false by default, which indicates whether the User is enabled
     // to perform operations in the Wallet Service),
 
     var roles: String? = null
 ) {
-    fun toDto(): UserDetailsDTO = UserDetailsDTO(username, email,isEnabled,roles!!,password.toString(),password.toString(),"name","surname","address")
+    fun toDto(): UserDetailsDTO{
+        var authorities: MutableList<GrantedAuthority> = getRoles().map { SimpleGrantedAuthority(it.toString()) }.toMutableList()
+        return UserDetailsDTO(username, email ,isEnabled,roles!!,password.toString(),password.toString(), authoritiesCollection = authorities)
+    }
+
+    // Functions to get, add, remove roles
+    fun getRoles(): Set<Rolename>{
+        return roles!!.split(" ").map { Rolename.valueOf(it) }.toSet()
+    }
+
+    fun addRole(role: Rolename){
+        roles.plus(" ").plus(role)
+    }
+
+    fun removeRole(role: Rolename){
+        roles!!.replace("role", "")
+    }
+
 
 }

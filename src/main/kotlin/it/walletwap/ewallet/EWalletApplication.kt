@@ -5,22 +5,31 @@ import it.walletwap.ewallet.domain.Transaction
 import it.walletwap.ewallet.domain.User
 import it.walletwap.ewallet.domain.Wallet
 import it.walletwap.ewallet.dto.TransactionDTO
+import it.walletwap.ewallet.dto.UserDetailsDTO
 import it.walletwap.ewallet.repositories.CustomerRepository
 import it.walletwap.ewallet.repositories.TransactionRepository
 import it.walletwap.ewallet.repositories.UserRepository
 import it.walletwap.ewallet.repositories.WalletRepository
+import it.walletwap.ewallet.security.JwtUtils
 import it.walletwap.ewallet.services.impl.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.JavaMailSenderImpl
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.crypto.factory.PasswordEncoderFactories
+import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.web.AuthenticationEntryPoint
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.util.*
@@ -85,6 +94,10 @@ class EWalletApplication : Extensions() {
 
         return mailSender
     }
+
+    @Bean
+    fun passwordEncoder(): PasswordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder()
+
 
     @Bean
     fun test(
@@ -160,17 +173,23 @@ class EWalletApplication : Extensions() {
 
             println(walletService.transactionsByDate(1, "1615590000000", "1616540400000"))
             val userService = UserDetailsServiceImpl(userRepo, customerRepo)
-            userService.addRoleName(user1, Rolename.ADMIN.name)
+            /*userService.addRoleName(user1, Rolename.ADMIN.name)
             println(user1.roles)
             userService.removeRoleName(user1, Rolename.ADMIN.name)
             println(user1.roles)
 
             println(userService.getRoleName(user1))
             userService.registerUser(user1.toDto())
-            println(userService.getuserByUserName(user1.username)?.email)
+            println(userService.getuserByUserName(user1.username)?.email)*/
 
             //TODO inside bean it is difficult to access application context
             sendMessage(user1.email.toString(), "Testing mail sender", "Hi this is a test for mail sender")
+
+            //Testing generation JsonWebToken (Mirco)
+            /*var jwtUtils = JwtUtils(userRepo)
+            var userDetailsDTO: UserDetailsDTO = userRepo.findByUsername("mitchell")!!.toDto()
+            var authentication: UsernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken()
+            jwtUtils.generateJwtToken(SecurityContextHolder.getContext().authentication)*/
 
         }
     }
@@ -184,6 +203,8 @@ fun main(args: Array<String>) {
     val context = runApplication<EWalletApplication>(*args)
 
 }
+
+
 
 
 

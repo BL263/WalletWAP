@@ -9,6 +9,7 @@ import it.walletwap.ewallet.repositories.CustomerRepository
 import it.walletwap.ewallet.repositories.UserRepository
 import it.walletwap.ewallet.services.UserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
 import javax.transaction.Transactional
@@ -16,7 +17,8 @@ import javax.transaction.Transactional
 @Service
 @Transactional
 class UserDetailsServiceImpl(val userRepository: UserRepository,val customerRepository:CustomerRepository) : UserDetailsService,Extensions() {
-
+	@Autowired
+	lateinit var encoder: PasswordEncoder
 
     override fun getuserByUserName(username: String): User? {
        return userRepository.findByUsername(username)
@@ -41,11 +43,12 @@ class UserDetailsServiceImpl(val userRepository: UserRepository,val customerRepo
             return user.toDto()
     }
 
-	override fun getRoleName(user: User):String? {
+	// Moved them into User class as specification says
+	/*fun getRoleName(user: User):String? {
 		return user.roles
 	}
 
-	override fun addRoleName(user: User,roleTobeAdded:String):Boolean? {
+	fun addRoleName(user: User,roleTobeAdded:String):Boolean? {
 		if(user.roles.isNullOrEmpty())
 			user.roles=roleTobeAdded
 		else
@@ -53,7 +56,7 @@ class UserDetailsServiceImpl(val userRepository: UserRepository,val customerRepo
 		return  true
 	}
 
-	override fun removeRoleName(user: User,roleTobeRemoved:String):Boolean? {
+	fun removeRoleName(user: User,roleTobeRemoved:String):Boolean? {
 		if(user.roles?.contains(",") == true){
 		user.roles=user.roles?.replace(",$roleTobeRemoved", "")
 		return true}
@@ -67,25 +70,25 @@ class UserDetailsServiceImpl(val userRepository: UserRepository,val customerRepo
 			}
 		}
 		return  false
+	}*/
 
-	}
-	override fun registerUser(userdto: UserDetailsDTO): Optional<UserDetailsDTO>?{
-		if(userdto.username.isNullOrEmpty()) return null
-		if(userdto.email.isNullOrEmpty()) return null
+	override fun registerUser(userdto: UserDetailsDTO): UserDetailsDTO? {
+		if(userdto.username.isEmpty()) return null
+		if(userdto.email.isEmpty()) return null
 		// if user exists new user can not register
-		if(userRepository.findByUsername(userdto.username.toString())!=null) return null
+		if(userRepository.findByUsername(userdto.username)!=null) return null
 		if(userdto.password!=userdto.confirmPassword) return null
 
 
-		val user = User(username =userdto.username.toString(), email =userdto.email ,isEnabled = false, password = userdto.password, roles = Rolename.CUSTOMER.toString())
-		val customer = Customer(name = userdto.name, surname = userdto.surname, deliveryAddress = userdto.address, email = userdto.email.toString(), user = user)
+		val user = User(username =userdto.userName, email =userdto.email ,isEnabled = false, password = encoder.encode(userdto.pass), roles = Rolename.CUSTOMER.toString())
+		val customer = Customer(name = userdto.name, surname = userdto.surname, deliveryAddress = userdto.address, email = userdto.email, user = user)
 		userRepository.save(user)
 		customerRepository.save(customer)
 
 		val mailService = MailServiceImpl()
-		mailService.sendMessage(userdto.email.toString(),"Registeration successful","Dear ${userdto.name} ${userdto.surname} Thank you for the registration.")
+		mailService.sendMessage(userdto.email,"Registration successful","Dear ${userdto.name} ${userdto.surname} Thank you for the registration.")
 
-		return userdto.toOptional()
+		return user.toDto()
 	}
 
 }

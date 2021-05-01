@@ -19,7 +19,7 @@ interface UserDetailsService {
     /*
      * Stores the user passed as parameter in the application database
      */
-    fun registerUser(user: UserDetailsDTO): Optional<UserDetailsDTO>?
+    fun registerUser(user: UserDetailsDTO): UserDetailsDTO?
 
     /*
      * Returns an ArrayList with all the users in the database.
@@ -38,9 +38,4 @@ interface UserDetailsService {
 
     fun loadUserByUsername(username: String): UserDetailsDTO
 
-    fun getRoleName(user: User): String?
-
-    fun addRoleName(user: User, roleTobeAdded: String): Boolean?
-
-    fun removeRoleName(user: User, roleTobeRemoved: String): Boolean?
 }

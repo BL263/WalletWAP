@@ -12,7 +12,10 @@ class EmailVerificationToken(
     @GeneratedValue(strategy = GenerationType.AUTO, generator="seq")
     @GenericGenerator(name = "seq", strategy="increment")
     var id: Long? = null,
-    @Column(name = "username",nullable = false)
+
     var expiryDate :Date,
-    var token:String?,
+    @Column(name = "token",nullable = false)
+    var token:String,
+    @Column(name = "username",nullable = false)
+    var username: String
 )

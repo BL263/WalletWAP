@@ -34,7 +34,7 @@ interface UserDetailsService {
      */
     fun deleteuser(userId: Int?): Boolean?
 
-    fun enableUser(user: User, isEnable: Boolean): Boolean?
+    fun toggleIsEnableUser(user: User, isEnable: Boolean): Boolean?
 
     fun loadUserByUsername(username: String): UserDetailsDTO
 
@@ -43,4 +43,8 @@ interface UserDetailsService {
     fun addRoleName(user: User, roleTobeAdded: String): Boolean?
 
     fun removeRoleName(user: User, roleTobeRemoved: String): Boolean?
+
+    fun verifyToken(string: String):String?
+
+
 }

@@ -1,6 +1,10 @@
 package it.walletwap.ewallet.services
 
+import it.walletwap.ewallet.domain.EmailVerificationToken
+
 interface NotificationService {
 
-    fun createUUID():String?
+    fun createToken(string: String):String?
+    fun checkToken(token: String): EmailVerificationToken?
+
 }

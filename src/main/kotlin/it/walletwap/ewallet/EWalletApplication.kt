@@ -22,6 +22,8 @@ import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.JavaMailSenderImpl
 import org.springframework.scheduling.annotation.EnableScheduling
+import org.springframework.security.crypto.factory.PasswordEncoderFactories
+import org.springframework.security.crypto.password.PasswordEncoder
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.util.*
@@ -82,6 +84,11 @@ class EWalletApplication : Extensions() {
         }
 
         return mailSender
+    }
+
+    @Bean
+    fun passwordEncoder(): PasswordEncoder {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder()
     }
 
     @Bean

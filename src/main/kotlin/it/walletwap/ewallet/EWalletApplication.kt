@@ -56,7 +56,7 @@ class EWalletApplication : Extensions() {
 
 
     @Bean
-    fun sendMessage( ):SimpleMailMessage {
+    fun sendMessage(): SimpleMailMessage {
         var message = SimpleMailMessage()
         message.setFrom(mailUsername.toString());
         return message
@@ -114,7 +114,7 @@ class EWalletApplication : Extensions() {
             )
             val c4 =
                 Customer(name = "irene", surname = "maldera", email = "irene@gmail.com", deliveryAddress = "roveda 29")
-            val user1 = User(null, "behnam2", "pass", "behnam263@gmail.com", true, Rolename.CUSTOMER.name)
+            val user1 = User(null, "behnam2", "pass", "behnam263@gmail.com", true, RoleName.CUSTOMER.name)
             val c1Dto = c1.toDto()
             val c2Dto = c2.toDto()
             val c3Dto = c3.toDto()
@@ -165,29 +165,25 @@ class EWalletApplication : Extensions() {
 
             println(walletService.transactionsByDate(1, "1615590000000", "1616540400000"))
             val userService = UserDetailsServiceImpl(userRepo, customerRepo)
-            userService.addRoleName(user1, Rolename.ADMIN.name)
+            userService.addRoleName(user1, RoleName.ADMIN.name)
             println(user1.roles)
-            userService.removeRoleName(user1, Rolename.ADMIN.name)
+            userService.removeRoleName(user1, RoleName.ADMIN.name)
             println(user1.roles)
 
-           // println(userService.getRoleName(user1))
-           // userService.registerUser(user1.toDto())
-           // println(userService.getuserByUserName(user1.username)?.email)
+            // println(userService.getRoleName(user1))
+            // userService.registerUser(user1.toDto())
+            // println(userService.getuserByUserName(user1.username)?.email)
 
             //TODO inside bean it is difficult to access application context
-           // sendMessage(user1.email.toString(), "Testing mail sender", "Hi this is a test for mail sender")
+            // sendMessage(user1.email.toString(), "Testing mail sender", "Hi this is a test for mail sender")
 
         }
     }
-
-
 }
-
 
 
 fun main(args: Array<String>) {
     val context = runApplication<EWalletApplication>(*args)
-
 }
 
 

@@ -35,7 +35,7 @@ class JwtUtils {
 
     fun generateJwtToken(authentication: Authentication): String {
         return Jwts.builder()
-            .setIssuer( authentication.principal.toString())
+            .setIssuer(authentication.principal.toString())
             .setExpiration(Date(System.currentTimeMillis() + expirationTime.toLong()))
             .signWith(SignatureAlgorithm.HS256, jwtSecret)
             .compact()
@@ -78,8 +78,8 @@ class JwtUtils {
         return extractUser(Jwts.parserBuilder().setSigningKey(jwtSecret).build().parseClaimsJws(authToken))?.toDto()
     }
 
-     fun extractUser(parseClaimsJws: Jws<Claims>?): User? {
-            return userRepository.findByUsername(parseClaimsJws?.body!!["iss"].toString())
+    fun extractUser(parseClaimsJws: Jws<Claims>?): User? {
+        return userRepository.findByUsername(parseClaimsJws?.body!!["iss"].toString())
     }
 
 }

@@ -21,6 +21,9 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.JavaMailSenderImpl
+import org.springframework.scheduling.annotation.EnableScheduling
+import org.springframework.security.crypto.factory.PasswordEncoderFactories
+import org.springframework.security.crypto.password.PasswordEncoder
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.util.*
@@ -28,7 +31,7 @@ import javax.mail.MessagingException
 
 
 @SpringBootApplication
-@Configuration
+@EnableScheduling
 class EWalletApplication : Extensions() {
     @Value("\${spring.mail.host}")
     val mailHost: String? = null
@@ -52,18 +55,15 @@ class EWalletApplication : Extensions() {
     val mailDebug: String? = null
 
 
-    fun sendMessage(toMail: String, subject: String, mailBody: String) {
+    @Bean
+    fun sendMessage( ):SimpleMailMessage {
         var message = SimpleMailMessage()
         message.setFrom(mailUsername.toString());
-        message.setTo(toMail)
-        message.setSubject(subject)
-        message.setText(mailBody)
-        message.setSentDate(Date())
-        getJavaMailSender()?.send(message)
+        return message
 
     }
 
-
+    @Bean
     fun getJavaMailSender(): JavaMailSender? {
 
         val mailSender = JavaMailSenderImpl()
@@ -84,6 +84,11 @@ class EWalletApplication : Extensions() {
         }
 
         return mailSender
+    }
+
+    @Bean
+    fun passwordEncoder(): PasswordEncoder {
+        return PasswordEncoderFactories.createDelegatingPasswordEncoder()
     }
 
     @Bean
@@ -165,12 +170,12 @@ class EWalletApplication : Extensions() {
             userService.removeRoleName(user1, Rolename.ADMIN.name)
             println(user1.roles)
 
-            println(userService.getRoleName(user1))
-            userService.registerUser(user1.toDto())
-            println(userService.getuserByUserName(user1.username)?.email)
+           // println(userService.getRoleName(user1))
+           // userService.registerUser(user1.toDto())
+           // println(userService.getuserByUserName(user1.username)?.email)
 
             //TODO inside bean it is difficult to access application context
-            sendMessage(user1.email.toString(), "Testing mail sender", "Hi this is a test for mail sender")
+           // sendMessage(user1.email.toString(), "Testing mail sender", "Hi this is a test for mail sender")
 
         }
     }

@@ -24,6 +24,6 @@ class User(
 
     var roles: String? = null
 ) {
-    fun toDto(): UserDetailsDTO = UserDetailsDTO(username, email,isEnabled,roles!!,password.toString(),password.toString(),"name","surname","address")
+    fun toDto(): UserDetailsDTO = UserDetailsDTO(username, email,password.toString(),password.toString(),"name","surname","address")
 
 }

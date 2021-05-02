@@ -17,10 +17,21 @@ class UserController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    fun addWallet(@RequestBody @Valid registerForm: UserDetailsDTO): String {
+    fun addUser(@RequestBody @Valid registerForm: UserDetailsDTO): String {
         if (registerForm.password == registerForm.confirmPassword) {
             return userDetailsService.registerUser(registerForm).toString()
         } else return "Passwords do not match"
 
     }
+
+    @GetMapping("/registrationConfirm")
+    @ResponseStatus(HttpStatus.OK)
+    fun checkToken(@RequestParam(
+        name = "token",
+        required = true,
+        defaultValue = ""
+    ) token: String):String{
+        return userDetailsService.verifyToken(token).toString()
+    }
+
 }

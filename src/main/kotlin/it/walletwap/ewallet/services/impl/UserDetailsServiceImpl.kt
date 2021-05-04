@@ -95,7 +95,6 @@ class UserDetailsServiceImpl(val userRepository: UserRepository,val customerRepo
         userRepository.save(user)
         customerRepository.save(customer)
 
-        val mailService = MailServiceImpl()
         mailService.sendMessage(userdto.email,"Registration successful","Dear ${userdto.name} ${userdto.surname} Thank you for the registration.")
 
         val tokenizedUrl =

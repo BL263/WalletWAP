@@ -94,13 +94,11 @@ class UserDetailsServiceImpl(val userRepository: UserRepository,val customerRepo
         userRepository.save(user)
         customerRepository.save(customer)
 
-        mailService.sendMessage(userdto.email,"Registration successful","Dear ${userdto.name} ${userdto.surname} Thank you for the registration.")
-
         val tokenizedUrl =
             "${domainAddress}/auth/registrationConfirm?token=${notificationService.createToken(user.username)}"
 
         mailService.sendMessage(
-            userdto.email.toString(), "Registeration successful",
+            userdto.email.toString(), "Registration successful",
             "Dear ${userdto.name} ${userdto.surname} " +
                     "Thank you for the registration." +
                     "Please browse the link ${tokenizedUrl} in your browser"

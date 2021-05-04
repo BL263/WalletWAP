@@ -1,11 +1,10 @@
 package it.walletwap.ewallet.domain
 
 import it.walletwap.ewallet.Rolename
-import it.walletwap.ewallet.dto.UserDetailsDTO
+import it.walletwap.ewallet.dto.UserDetailsDto
 import org.hibernate.annotations.GenericGenerator
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
-import java.util.stream.Collectors
 import javax.persistence.*
 import javax.validation.constraints.NotBlank
 
@@ -28,9 +27,9 @@ class User(
 
     var roles: String? = null
 ) {
-    fun toDto(): UserDetailsDTO{
+    fun toDto(): UserDetailsDto{
         var authorities: MutableList<GrantedAuthority> = getRoles().map { SimpleGrantedAuthority(it.toString()) }.toMutableList()
-        return UserDetailsDTO(username, email ,isEnabled,roles!!,password.toString(),password.toString(), authoritiesCollection = authorities)
+        return UserDetailsDto(username, email ,isEnabled,roles!!,password.toString(),password.toString(), authoritiesCollection = authorities)
     }
 
     // Functions to get, add, remove roles

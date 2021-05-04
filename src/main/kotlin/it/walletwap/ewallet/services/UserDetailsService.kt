@@ -2,11 +2,10 @@ package it.walletwap.ewallet.services
 
 
 import it.walletwap.ewallet.domain.User
-import it.walletwap.ewallet.dto.UserDetailsDTO
-import java.util.*
+import it.walletwap.ewallet.dto.UserDetailsDto
 
 
-interface UserDetailsService {
+interface UserDetailsService: org.springframework.security.core.userdetails.UserDetailsService {
 
     /*
 	 * Queries the database and returns the userDto corresponding to the userId passed as parameter.
@@ -14,12 +13,12 @@ interface UserDetailsService {
 	 * Returns null if no user is found with the given Id
 	 */
 
-    fun getuserByUserName(username: String): User?
+    fun getUserByUserName(username: String): User?
 
     /*
      * Stores the user passed as parameter in the application database
      */
-    fun registerUser(user: UserDetailsDTO): UserDetailsDTO?
+    fun registerUser(user: UserDetailsDto): UserDetailsDto?
 
     /*
      * Returns an ArrayList with all the users in the database.
@@ -32,10 +31,10 @@ interface UserDetailsService {
      * Throws an exception in case of invalid (negative) userId
    	 * Returns true if the user is deleted, false otherwise
      */
-    fun deleteuser(userId: Int?): Boolean?
+    fun deleteUser(userId: Int?): Boolean?
 
     fun enableUser(user: User, isEnable: Boolean): Boolean?
 
-    fun loadUserByUsername(username: String): UserDetailsDTO
+    override fun loadUserByUsername(username: String): UserDetailsDto
 
 }

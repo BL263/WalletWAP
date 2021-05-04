@@ -1,6 +1,5 @@
 package it.walletwap.ewallet.security
 
-import it.walletwap.ewallet.dto.UserDetailsDTO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
@@ -37,12 +36,18 @@ class JwtAuthenticationTokenFilter: OncePerRequestFilter() {
         } catch (e: Exception) {
             System.err.println("Cannot set user authentication: ${e}")
         }
+        filterChain.doFilter(request, response)
     }
     fun parseJwt(request: HttpServletRequest ): String? {
-        var headerAuth: String = request.getHeader("Authorization")
-        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
-            return headerAuth.substring(7, headerAuth.length);
+        try{
+            var headerAuth: String = request.getHeader("Authorization")
+            if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
+                return headerAuth.substring(7, headerAuth.length);
+            }
+        } catch (e: NullPointerException){
+            // None authorization header
         }
+
         return null;
     }
 }

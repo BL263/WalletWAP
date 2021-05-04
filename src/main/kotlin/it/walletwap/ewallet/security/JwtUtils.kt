@@ -1,7 +1,7 @@
 package it.walletwap.ewallet.security
 
 import io.jsonwebtoken.*
-import it.walletwap.ewallet.dto.UserDetailsDTO
+import it.walletwap.ewallet.dto.UserDetailsDto
 import it.walletwap.ewallet.repositories.UserRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.Authentication
@@ -15,19 +15,20 @@ class JwtUtils(val userRepository: UserRepository) {
     @Value("\${application.jwt.jwtExpirationMs}")
     var jwtExpiration: Int = 60000
 
-    @Value("\${application.jwt.jwtSecret")
+    @Value("\${application.jwt.jwtSecret}")
     lateinit var jwtSecret: String
 
 
     fun generateJwtToken (authentication: Authentication): String
         {
-            var userPrincipal: UserDetailsDTO = authentication.principal as UserDetailsDTO
+
+            var userPrincipal: UserDetailsDto = authentication.principal as UserDetailsDto
             return Jwts.builder()
                 .setSubject((userPrincipal.username))
                 .claim("roles", userPrincipal.roles)
                 .setIssuedAt(Date())
                 .setExpiration(Date(Date().time + jwtExpiration))
-                .signWith(SignatureAlgorithm.ES512, jwtSecret)
+                .signWith(SignatureAlgorithm.HS256, jwtSecret)
                 .compact()
 
         }
@@ -50,7 +51,7 @@ class JwtUtils(val userRepository: UserRepository) {
             return true
         }
 
-    fun getDetailsFromJwtToken(authToken: String): UserDetailsDTO
+    fun getDetailsFromJwtToken(authToken: String): UserDetailsDto
     {
         var username = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken).body.subject
         return userRepository.findByUsername(username)!!.toDto()

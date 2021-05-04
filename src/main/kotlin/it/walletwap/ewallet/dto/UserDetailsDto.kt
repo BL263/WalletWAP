@@ -4,17 +4,17 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import javax.validation.constraints.Email
 
-class UserDetailsDTO(var userName: String,
-                          @Email  //annotation used to validating email
+class UserDetailsDto(var userName: String,
+                     @Email  //annotation used to validating email
                           var email: String,
-                          var isEnab: Boolean = false,
-                          var roles: String? = null,
-                          var pass: String,
-                          var confirmPassword: String,
-                          var name: String? = null,
-                          var surname: String? = null,
-                          var address: String? = null,
-                          val authoritiesCollection: MutableList<GrantedAuthority> = mutableListOf()): UserDetails{
+                     var isEnab: Boolean = false,
+                     var roles: String? = null,
+                     var pass: String,
+                     var confirmPassword: String,
+                     var name: String? = null,
+                     var surname: String? = null,
+                     var address: String? = null,
+                     val authoritiesCollection: MutableList<GrantedAuthority> = mutableListOf()): UserDetails{
 
     override fun getAuthorities(): MutableList<out GrantedAuthority> {
         return this.authoritiesCollection
@@ -29,15 +29,15 @@ class UserDetailsDTO(var userName: String,
     }
 
     override fun isAccountNonExpired(): Boolean {
-        TODO("Not yet implemented")
+        return true
     }
 
     override fun isAccountNonLocked(): Boolean {
-        TODO("Not yet implemented")
+        return true
     }
 
     override fun isCredentialsNonExpired(): Boolean {
-        TODO("Not yet implemented")
+        return true
     }
 
     override fun isEnabled(): Boolean {

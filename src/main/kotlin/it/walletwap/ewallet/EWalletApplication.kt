@@ -5,31 +5,20 @@ import it.walletwap.ewallet.domain.Transaction
 import it.walletwap.ewallet.domain.User
 import it.walletwap.ewallet.domain.Wallet
 import it.walletwap.ewallet.dto.TransactionDTO
-import it.walletwap.ewallet.dto.UserDetailsDTO
 import it.walletwap.ewallet.repositories.CustomerRepository
 import it.walletwap.ewallet.repositories.TransactionRepository
 import it.walletwap.ewallet.repositories.UserRepository
 import it.walletwap.ewallet.repositories.WalletRepository
-import it.walletwap.ewallet.security.JwtUtils
 import it.walletwap.ewallet.services.impl.*
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.JavaMailSenderImpl
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.Authentication
-import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.crypto.factory.PasswordEncoderFactories
-import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.security.web.AuthenticationEntryPoint
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.util.*
@@ -95,8 +84,8 @@ class EWalletApplication : Extensions() {
         return mailSender
     }
 
-    @Bean
-    fun passwordEncoder(): PasswordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder()
+    /*@Bean
+    fun passwordEncoder(): PasswordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder()*/
 
 
     @Bean

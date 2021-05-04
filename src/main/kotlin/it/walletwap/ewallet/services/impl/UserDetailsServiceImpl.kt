@@ -4,14 +4,13 @@ import it.walletwap.ewallet.Extensions
 import it.walletwap.ewallet.Rolename
 import it.walletwap.ewallet.domain.Customer
 import it.walletwap.ewallet.domain.User
-import it.walletwap.ewallet.dto.UserDetailsDTO
+import it.walletwap.ewallet.dto.UserDetailsDto
 import it.walletwap.ewallet.repositories.CustomerRepository
 import it.walletwap.ewallet.repositories.UserRepository
 import it.walletwap.ewallet.services.UserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
-import java.util.*
 import javax.transaction.Transactional
 
 @Service
@@ -20,14 +19,14 @@ class UserDetailsServiceImpl(val userRepository: UserRepository,val customerRepo
 	@Autowired
 	lateinit var encoder: PasswordEncoder
 
-    override fun getuserByUserName(username: String): User? {
+    override fun getUserByUserName(username: String): User? {
        return userRepository.findByUsername(username)
     }
 
     override val allusers: List<Any?>?
         get() = TODO("Not yet implemented")
 
-	override fun deleteuser(userId: Int?): Boolean? {
+	override fun deleteUser(userId: Int?): Boolean? {
 		TODO("Not yet implemented")
 	}
 
@@ -36,7 +35,7 @@ class UserDetailsServiceImpl(val userRepository: UserRepository,val customerRepo
 		return user.isEnabled==isEnable
 	}
 
-    override fun loadUserByUsername(username: String): UserDetailsDTO {
+    override fun loadUserByUsername(username: String): UserDetailsDto {
         val user = userRepository.findByUsername(username)
         if (user == null) throw UserException("user not found")
         else
@@ -72,7 +71,7 @@ class UserDetailsServiceImpl(val userRepository: UserRepository,val customerRepo
 		return  false
 	}*/
 
-	override fun registerUser(userdto: UserDetailsDTO): UserDetailsDTO? {
+	override fun registerUser(userdto: UserDetailsDto): UserDetailsDto? {
 		if(userdto.username.isEmpty()) return null
 		if(userdto.email.isEmpty()) return null
 		// if user exists new user can not register

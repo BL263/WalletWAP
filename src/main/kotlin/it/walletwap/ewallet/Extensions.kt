@@ -1,10 +1,8 @@
 package it.walletwap.ewallet
 
 import it.walletwap.ewallet.domain.Transaction
-import it.walletwap.ewallet.domain.User
 import it.walletwap.ewallet.domain.Wallet
 import it.walletwap.ewallet.dto.TransactionDTO
-import it.walletwap.ewallet.dto.UserDetailsDTO
 import it.walletwap.ewallet.dto.WalletDTO
 import java.math.BigDecimal
 import java.util.*
@@ -32,6 +30,9 @@ open class Extensions {
 enum class Rolename {
     CUSTOMER , ADMIN
 }
+
+// Response to signin request
+data class JwtResponse(var token: String, var username: String, var email: String) {}
 
 // Handled by UserDetailsDTO instead of custom class as in PDF mentioned
 // Currently located here, move it wherever you rather to

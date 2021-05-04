@@ -3,18 +3,14 @@ package it.walletwap.ewallet.controllers
 
 import com.google.gson.Gson
 import com.google.gson.JsonObject
-import it.walletwap.ewallet.dto.CustomerDto
 import it.walletwap.ewallet.dto.TransactionDTO
 import it.walletwap.ewallet.dto.WalletDTO
 import it.walletwap.ewallet.services.TransactionsService
 import it.walletwap.ewallet.services.WalletService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType
-import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
 import java.util.*
-import javax.validation.Valid
 
 
 @RestController

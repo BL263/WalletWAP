@@ -1,7 +1,7 @@
 package it.walletwap.ewallet.security
 
 import io.jsonwebtoken.*
-import it.walletwap.ewallet.dto.UserDetailsDto
+import it.walletwap.ewallet.dto.UserDetailsDTO
 import it.walletwap.ewallet.repositories.UserRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.Authentication
@@ -22,7 +22,7 @@ class JwtUtils(val userRepository: UserRepository) {
     fun generateJwtToken (authentication: Authentication): String
         {
 
-            var userPrincipal: UserDetailsDto = authentication.principal as UserDetailsDto
+            var userPrincipal: UserDetailsDTO = authentication.principal as UserDetailsDTO
             return Jwts.builder()
                 .setSubject((userPrincipal.username))
                 .claim("roles", userPrincipal.roles)
@@ -51,7 +51,7 @@ class JwtUtils(val userRepository: UserRepository) {
             return true
         }
 
-    fun getDetailsFromJwtToken(authToken: String): UserDetailsDto
+    fun getDetailsFromJwtToken(authToken: String): UserDetailsDTO
     {
         var username = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken).body.subject
         return userRepository.findByUsername(username)!!.toDto()

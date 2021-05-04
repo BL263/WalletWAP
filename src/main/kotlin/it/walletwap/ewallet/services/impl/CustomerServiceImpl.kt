@@ -3,11 +3,9 @@ package it.walletwap.ewallet.services.impl
 import it.walletwap.ewallet.repositories.CustomerRepository
 import it.walletwap.ewallet.services.CustomerService
 import it.walletwap.ewallet.Extensions
-import it.walletwap.ewallet.domain.Wallet
-import it.walletwap.ewallet.dto.CustomerDto
+import it.walletwap.ewallet.dto.CustomerDTO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import java.math.BigDecimal
 import java.util.*
 import javax.transaction.Transactional
 
@@ -16,21 +14,21 @@ import javax.transaction.Transactional
 class CustomerServiceImpl : CustomerService, Extensions() {
     @Autowired
     lateinit var repository: CustomerRepository
-    override fun getCustomerById(customerId: Long): Optional<CustomerDto>? {
+    override fun getCustomerById(customerId: Long): Optional<CustomerDTO>? {
         val customer = repository.findById(customerId)
         return if (customer.isPresent) customer.get().toDto().toOptional() else null
     }
 
 
-    override fun saveCustomer(customerDto: CustomerDto?): Boolean {
-        if (customerDto != null) {
-            val customerFound = repository.findByEmail(customerDto.email)
+    override fun saveCustomer(customerDTO: CustomerDTO?): Boolean {
+        if (customerDTO != null) {
+            val customerFound = repository.findByEmail(customerDTO.email)
             if (customerFound != null) {
-                customerFound.name = customerDto.name
+                customerFound.name = customerDTO.name
                // customerFound.wallet = mutableSetOf(Wallet(null, BigDecimal.ZERO,customerFound))
-                customerFound.deliveryAddress = customerDto.deliveryAddress
-                customerFound.email = customerDto.email
-                customerFound.surname = customerDto.surname
+                customerFound.deliveryAddress = customerDTO.deliveryAddress
+                customerFound.email = customerDTO.email
+                customerFound.surname = customerDTO.surname
             }
             return true
         }

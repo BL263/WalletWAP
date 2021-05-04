@@ -2,19 +2,15 @@ package it.walletwap.ewallet.services.impl
 
 import it.walletwap.ewallet.Extensions
 import it.walletwap.ewallet.domain.Customer
-import it.walletwap.ewallet.domain.Transaction
 import it.walletwap.ewallet.domain.Wallet
-import it.walletwap.ewallet.dto.CustomerDto
 import it.walletwap.ewallet.dto.TransactionDTO
 import it.walletwap.ewallet.dto.WalletDTO
 import it.walletwap.ewallet.repositories.CustomerRepository
 import it.walletwap.ewallet.repositories.TransactionRepository
 import it.walletwap.ewallet.repositories.WalletRepository
 import it.walletwap.ewallet.services.WalletService
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.math.BigDecimal
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.LocalDate

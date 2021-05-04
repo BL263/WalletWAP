@@ -4,7 +4,7 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import javax.validation.constraints.Email
 
-class UserDetailsDto(var userName: String,
+class UserDetailsDTO(var userName: String,
                      @Email  //annotation used to validating email
                           var email: String,
                      var isEnab: Boolean = false,

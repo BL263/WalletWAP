@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.JavaMailSenderImpl
+import org.springframework.scheduling.annotation.EnableScheduling
 import java.math.BigDecimal
 import java.text.SimpleDateFormat
 import java.util.*
@@ -26,6 +27,7 @@ import javax.mail.MessagingException
 
 
 @SpringBootApplication
+@EnableScheduling
 @Configuration
 class EWalletApplication : Extensions() {
     @Value("\${spring.mail.host}")
@@ -50,18 +52,15 @@ class EWalletApplication : Extensions() {
     val mailDebug: String? = null
 
 
-    fun sendMessage(toMail: String, subject: String, mailBody: String) {
+    @Bean
+    fun sendMessage( ):SimpleMailMessage {
         var message = SimpleMailMessage()
         message.setFrom(mailUsername.toString());
-        message.setTo(toMail)
-        message.setSubject(subject)
-        message.setText(mailBody)
-        message.setSentDate(Date())
-        getJavaMailSender()?.send(message)
+        return message
 
     }
 
-
+    @Bean
     fun getJavaMailSender(): JavaMailSender? {
 
         val mailSender = JavaMailSenderImpl()
@@ -172,13 +171,7 @@ class EWalletApplication : Extensions() {
             println(userService.getuserByUserName(user1.username)?.email)*/
 
             //TODO inside bean it is difficult to access application context
-            sendMessage(user1.email.toString(), "Testing mail sender", "Hi this is a test for mail sender")
-
-            //Testing generation JsonWebToken (Mirco)
-            /*var jwtUtils = JwtUtils(userRepo)
-            var userDetailsDTO: UserDetailsDTO = userRepo.findByUsername("mitchell")!!.toDto()
-            var authentication: UsernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken()
-            jwtUtils.generateJwtToken(SecurityContextHolder.getContext().authentication)*/
+           // sendMessage(user1.email.toString(), "Testing mail sender", "Hi this is a test for mail sender")
 
         }
     }
@@ -192,8 +185,6 @@ fun main(args: Array<String>) {
     val context = runApplication<EWalletApplication>(*args)
 
 }
-
-
 
 
 

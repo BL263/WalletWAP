@@ -1,11 +1,9 @@
 package it.walletwap.ewallet.services
 
 import it.walletwap.ewallet.domain.Wallet
-import it.walletwap.ewallet.dto.CustomerDto
 import it.walletwap.ewallet.dto.TransactionDTO
 import it.walletwap.ewallet.dto.WalletDTO
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 interface WalletService {

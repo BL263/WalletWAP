@@ -1,6 +1,6 @@
 package it.walletwap.ewallet.domain
 
-import it.walletwap.ewallet.dto.CustomerDto
+import it.walletwap.ewallet.dto.CustomerDTO
 import org.hibernate.annotations.GenericGenerator
 import javax.persistence.*
 
@@ -29,7 +29,7 @@ class Customer(
     @JoinColumn(name = "id")
     var user: User? = null
 ) {
-    fun toDto() = CustomerDto(this.name, this.surname, this.deliveryAddress, this.email)
+    fun toDto() = CustomerDTO(this.name, this.surname, this.deliveryAddress, this.email)
 }
 
 

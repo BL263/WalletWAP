@@ -1,6 +1,6 @@
 package it.walletwap.ewallet.services
 
-import it.walletwap.ewallet.dto.CustomerDto
+import it.walletwap.ewallet.dto.CustomerDTO
 import java.util.*
 
 
@@ -11,12 +11,12 @@ interface CustomerService {
 	 * Returns null if no customer is found with the given Id
 	 */
 
-    fun getCustomerById(customerId: Long): Optional<CustomerDto>?
+    fun getCustomerById(customerId: Long): Optional<CustomerDTO>?
 
     /*
      * Stores the customer passed as parameter in the application database
      */
-    fun saveCustomer(customerDto: CustomerDto?): Boolean
+    fun saveCustomer(customerDTO: CustomerDTO?): Boolean
 
     /*
      * Returns an ArrayList with all the Customers in the database.

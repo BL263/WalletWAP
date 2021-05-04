@@ -2,7 +2,7 @@ package it.walletwap.ewallet.controllers
 
 
 import it.walletwap.ewallet.JwtResponse
-import it.walletwap.ewallet.dto.UserDetailsDto
+import it.walletwap.ewallet.dto.UserDetailsDTO
 import it.walletwap.ewallet.security.JwtUtils
 import it.walletwap.ewallet.services.UserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
@@ -14,7 +14,6 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
-
 
 @RestController
 @RequestMapping("/auth")
@@ -31,9 +30,9 @@ class UserController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    fun registerUser(@RequestBody @Valid userDetailsDto: UserDetailsDto): String {
-        if (userDetailsDto.password == userDetailsDto.confirmPassword) {
-            return userDetailsService.registerUser(userDetailsDto).toString()
+    fun registerUser(@RequestBody @Valid userDetailsDTO: UserDetailsDTO): String {
+        if (userDetailsDTO.password == userDetailsDTO.confirmPassword) {
+            return userDetailsService.registerUser(userDetailsDTO).toString()
         } else return "Passwords do not match"
     }
 
@@ -46,7 +45,7 @@ class UserController {
         )
         SecurityContextHolder.getContext().authentication = authentication
         val jwt: String = jwtUtils.generateJwtToken(authentication)
-        val userDetails: UserDetailsDto = authentication.principal as UserDetailsDto
+        val userDetails: UserDetailsDTO = authentication.principal as UserDetailsDTO
         //Response with a JWT in order to give to the authenticated user a proof that he is authenticated (to perform request on protected path)
         return ResponseEntity.ok<Any>(
             JwtResponse(
@@ -56,4 +55,15 @@ class UserController {
             )
         )
     }
+
+    @GetMapping("/registrationConfirm")
+    @ResponseStatus(HttpStatus.OK)
+    fun checkToken(@RequestParam(
+        name = "token",
+        required = true,
+        defaultValue = ""
+    ) token: String):String{
+        return userDetailsService.verifyToken(token).toString()
+    }
+
 }

@@ -14,11 +14,15 @@ import java.util.*
 class MailServiceImpl:MailService {
 
     @Autowired
-    private val applicationContext: ApplicationContext? = null
-    @Value("\${spring.mail.username}")
-    val mailUsername: String? = null
+    lateinit var mailSender: JavaMailSender
+    @Autowired
+    lateinit var simpleMessage:SimpleMailMessage
+
     override fun sendMessage ( toMail:String, subject:String, mailBody:String){
-     //TODO send mail from service
+        simpleMessage.setText(mailBody)
+        simpleMessage.setSubject(subject)
+        simpleMessage.setTo(toMail)
+        mailSender.send(simpleMessage)
     }
 
 

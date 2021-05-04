@@ -4,13 +4,16 @@ import it.walletwap.ewallet.Extensions
 import it.walletwap.ewallet.Rolename
 import it.walletwap.ewallet.domain.Customer
 import it.walletwap.ewallet.domain.User
-import it.walletwap.ewallet.dto.UserDetailsDto
+import it.walletwap.ewallet.dto.UserDetailsDTO
 import it.walletwap.ewallet.repositories.CustomerRepository
 import it.walletwap.ewallet.repositories.UserRepository
+import it.walletwap.ewallet.services.MailService
+import it.walletwap.ewallet.services.NotificationService
 import it.walletwap.ewallet.services.UserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
+import java.util.*
 import javax.transaction.Transactional
 
 @Service
@@ -18,6 +21,14 @@ import javax.transaction.Transactional
 class UserDetailsServiceImpl(val userRepository: UserRepository,val customerRepository:CustomerRepository) : UserDetailsService,Extensions() {
 	@Autowired
 	lateinit var encoder: PasswordEncoder
+
+    @Autowired
+    lateinit var mailService: MailService
+
+    @Autowired
+    lateinit var notificationService: NotificationService
+
+    var domainAddress = "http://localhost:8080"
 
     override fun getUserByUserName(username: String): User? {
        return userRepository.findByUsername(username)
@@ -30,12 +41,12 @@ class UserDetailsServiceImpl(val userRepository: UserRepository,val customerRepo
 		TODO("Not yet implemented")
 	}
 
-	override fun enableUser(user: User,isEnable:Boolean): Boolean? {
-		user.isEnabled=isEnable
-		return user.isEnabled==isEnable
-	}
+    override fun toggleIsEnableUser(user: User, isEnable: Boolean): Boolean? {
+        user.isEnabled = isEnable
+        return user.isEnabled == isEnable
+    }
 
-    override fun loadUserByUsername(username: String): UserDetailsDto {
+    override fun loadUserByUsername(username: String): UserDetailsDTO {
         val user = userRepository.findByUsername(username)
         if (user == null) throw UserException("user not found")
         else
@@ -47,7 +58,7 @@ class UserDetailsServiceImpl(val userRepository: UserRepository,val customerRepo
 		return user.roles
 	}
 
-	fun addRoleName(user: User,roleTobeAdded:String):Boolean? {
+	override fun addRoleName(user: User,roleTobeAdded:String):Boolean? {
 		if(user.roles.isNullOrEmpty())
 			user.roles=roleTobeAdded
 		else
@@ -55,7 +66,7 @@ class UserDetailsServiceImpl(val userRepository: UserRepository,val customerRepo
 		return  true
 	}
 
-	fun removeRoleName(user: User,roleTobeRemoved:String):Boolean? {
+	override fun removeRoleName(user: User,roleTobeRemoved:String):Boolean? {
 		if(user.roles?.contains(",") == true){
 		user.roles=user.roles?.replace(",$roleTobeRemoved", "")
 		return true}
@@ -71,25 +82,48 @@ class UserDetailsServiceImpl(val userRepository: UserRepository,val customerRepo
 		return  false
 	}*/
 
-	override fun registerUser(userdto: UserDetailsDto): UserDetailsDto? {
-		if(userdto.username.isEmpty()) return null
-		if(userdto.email.isEmpty()) return null
-		// if user exists new user can not register
-		if(userRepository.findByUsername(userdto.username)!=null) return null
-		if(userdto.password!=userdto.confirmPassword) return null
+    override fun registerUser(userdto: UserDetailsDTO): UserDetailsDTO? {
+        if(userdto.username.isEmpty()) return null
+        if(userdto.email.isEmpty()) return null
+        // if user exists new user can not register
+        if(userRepository.findByUsername(userdto.username)!=null) return null
+        if(userdto.password!=userdto.confirmPassword) return null
 
 
-		val user = User(username =userdto.userName, email =userdto.email ,isEnabled = false, password = encoder.encode(userdto.pass), roles = Rolename.CUSTOMER.toString())
-		val customer = Customer(name = userdto.name, surname = userdto.surname, deliveryAddress = userdto.address, email = userdto.email, user = user)
-		userRepository.save(user)
-		customerRepository.save(customer)
+        val user = User(username =userdto.userName, email =userdto.email ,isEnabled = false, password = encoder.encode(userdto.pass), roles = Rolename.CUSTOMER.toString())
+        val customer = Customer(name = userdto.name, surname = userdto.surname, deliveryAddress = userdto.address, email = userdto.email, user = user)
+        userRepository.save(user)
+        customerRepository.save(customer)
 
-		val mailService = MailServiceImpl()
-		mailService.sendMessage(userdto.email,"Registration successful","Dear ${userdto.name} ${userdto.surname} Thank you for the registration.")
+        val mailService = MailServiceImpl()
+        mailService.sendMessage(userdto.email,"Registration successful","Dear ${userdto.name} ${userdto.surname} Thank you for the registration.")
 
-		return user.toDto()
-	}
+        val tokenizedUrl =
+            "${domainAddress}/auth/registrationConfirm?token=${notificationService.createToken(user.username)}"
 
+        mailService.sendMessage(
+            userdto.email.toString(), "Registeration successful",
+            "Dear ${userdto.name} ${userdto.surname} " +
+                    "Thank you for the registration." +
+                    "Please browse the link ${tokenizedUrl} in your browser"
+        )
+        return user.toDto()
+    }
+
+    override fun verifyToken(token: String): String? {
+        val token = notificationService.checkToken(token)
+        return if (token?.username.isNullOrEmpty())
+            "Wrong Token"
+        else {
+            val userFound = getUserByUserName(token?.username.toString())
+            if (userFound != null && token?.expiryDate?.compareTo(Date())!!>0) {
+                toggleIsEnableUser(userFound, isEnable = true)
+                "Successfuly registered"
+            } else
+                "Wrong Token"
+
+        }
+    }
 }
 
 
@@ -98,8 +132,6 @@ class UserException : Exception {
 		private set
 	constructor(message: String?) : super(message) {}
 	constructor(message: String?, cause: Throwable?) : super(message, cause) {}
-	constructor(message: String?, cause: Throwable?, errorCode: Int) : super(message, cause) {
-
-	}
+	constructor(message: String?, cause: Throwable?, errorCode: Int) : super(message, cause) {}
 
 }

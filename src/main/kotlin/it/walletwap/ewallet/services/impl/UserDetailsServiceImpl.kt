@@ -89,8 +89,7 @@ class UserDetailsServiceImpl(val userRepository: UserRepository,val customerRepo
         if(userRepository.findByUsername(userdto.username)!=null) return null
         if(userdto.password!=userdto.confirmPassword) return null
 
-
-        val user = User(username =userdto.userName, email =userdto.email ,isEnabled = false, password = encoder.encode(userdto.pass), roles = Rolename.CUSTOMER.toString())
+        val user = User(username = userdto.username, email =userdto.email ,isEnabled = false, password = encoder.encode(userdto.password), roles = Rolename.CUSTOMER.toString())
         val customer = Customer(name = userdto.name, surname = userdto.surname, deliveryAddress = userdto.address, email = userdto.email, user = user)
         userRepository.save(user)
         customerRepository.save(customer)

@@ -1,6 +1,7 @@
 package it.walletwap.ewallet.controllers
 
 
+import com.sun.mail.iap.Response
 import it.walletwap.ewallet.JwtResponse
 import it.walletwap.ewallet.dto.UserDetailsDTO
 import it.walletwap.ewallet.security.JwtUtils
@@ -12,6 +13,7 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
 
@@ -30,15 +32,19 @@ class UserController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    fun registerUser(@RequestBody @Valid userDetailsDTO: UserDetailsDTO): String {
+    fun registerUser(@RequestBody @Valid userDetailsDTO: UserDetailsDTO, bindingResult: BindingResult): ResponseEntity<Any> {
         if (userDetailsDTO.password == userDetailsDTO.confirmPassword) {
-            return userDetailsService.registerUser(userDetailsDTO).toString()
-        } else return "Passwords do not match"
+            val userDTO = userDetailsService.registerUser(userDetailsDTO)
+            if (bindingResult.hasErrors()){
+                return ResponseEntity.badRequest().body("Bad Request message")
+            }
+            return ResponseEntity.ok(userDTO)
+        } else return ResponseEntity.badRequest().body("Passwords do not match")
     }
 
     @PostMapping("/signin")
     @ResponseStatus(HttpStatus.OK)
-    fun signInUser(@RequestParam(name = "username") username: String, @RequestParam(name = "password") password: String): ResponseEntity<Any>{
+    fun signInUser(@RequestParam(name = "username") username: String, @RequestParam(name = "password") password: String): ResponseEntity<JwtResponse>{
         //Perform authentication
         val authentication: Authentication = authenticationManager.authenticate(
             UsernamePasswordAuthenticationToken(username, password)
@@ -47,12 +53,8 @@ class UserController {
         val jwt: String = jwtUtils.generateJwtToken(authentication)
         val userDetails: UserDetailsDTO = authentication.principal as UserDetailsDTO
         //Response with a JWT in order to give to the authenticated user a proof that he is authenticated (to perform request on protected path)
-        return ResponseEntity.ok<Any>(
-            JwtResponse(
-                jwt,
-                userDetails.username,
-                userDetails.email,
-            )
+        return ResponseEntity
+            .ok<JwtResponse>(JwtResponse(jwt, userDetails.username, userDetails.email)
         )
     }
 

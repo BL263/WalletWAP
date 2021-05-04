@@ -29,7 +29,7 @@ class User(
 ) {
     fun toDto(): UserDetailsDTO{
         var authorities: MutableList<GrantedAuthority> = getRoles().map { SimpleGrantedAuthority(it.toString()) }.toMutableList()
-        return UserDetailsDTO(username, email ,isEnabled,roles!!,password.toString(),password.toString(), authoritiesCollection = authorities)
+        return UserDetailsDTO(username, email ,isEnabled,roles!!,password.toString(),password.toString(), authorities = authorities)
     }
 
     // Functions to get, add, remove roles

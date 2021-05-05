@@ -1,10 +1,10 @@
 package it.walletwap.ewallet.domain
 
 import com.fasterxml.jackson.annotation.JsonManagedReference
+import it.walletwap.ewallet.dto.WalletDTO
 import org.hibernate.annotations.GenericGenerator
 import java.math.BigDecimal
 import javax.persistence.*
-import javax.validation.constraints.Max
 import javax.validation.constraints.Min
 
 @Entity
@@ -13,18 +13,22 @@ class Wallet (
     @GeneratedValue(strategy = GenerationType.AUTO, generator="seq")
     @GenericGenerator(name = "seq", strategy="increment")
     var id: Long? = null,
-    @Min(value= 0 )
+
+    @field:Min(0, message = "Amount should always be positive")
     var amount: BigDecimal =  BigDecimal.ZERO,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
-     var customer: Customer,
+    var customer: Customer,
 
     @OneToMany(mappedBy = "walletFrom", fetch = FetchType.LAZY, targetEntity = Transaction::class)
     @JsonManagedReference
-     var payees: MutableSet<Transaction>? = null ,
+    var payees: MutableSet<Transaction> = mutableSetOf() ,
 
     @OneToMany(mappedBy = "walletTo", fetch = FetchType.LAZY, targetEntity =  Transaction::class)
     @JsonManagedReference
-     var payers: MutableSet<Transaction>? = null ,
+    var payers: MutableSet<Transaction> = mutableSetOf() ,
 )
+{
+    fun toDto(): WalletDTO = WalletDTO(this.id!!, this.amount)
+}

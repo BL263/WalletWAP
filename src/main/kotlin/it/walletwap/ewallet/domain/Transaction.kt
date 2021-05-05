@@ -1,6 +1,7 @@
 package it.walletwap.ewallet.domain
 
 import com.fasterxml.jackson.annotation.JsonBackReference
+import it.walletwap.ewallet.dto.TransactionDTO
 import org.hibernate.annotations.GenericGenerator
 import java.math.BigDecimal
 import java.util.*
@@ -13,9 +14,11 @@ class Transaction (
     @GeneratedValue(strategy = GenerationType.AUTO, generator="seq")
     @GenericGenerator(name = "seq", strategy="increment")
     var id: Long? = null,
-    @Min(value = 0 )
-    var amountTransferred: BigDecimal = BigDecimal.ZERO,
-    var transactionTime: Date? = null,
+
+    @field:Min(0, message = "Amount should always be positive")
+    var amountTransferred: BigDecimal,
+
+    var transactionTime: Date,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
@@ -26,4 +29,7 @@ class Transaction (
     @JsonBackReference
     @JoinColumn
     var walletTo: Wallet
-)
+){
+    fun toDto(): TransactionDTO =
+        TransactionDTO(this.amountTransferred, Date(), this.walletFrom.id!!, this.walletTo.id!!)
+}

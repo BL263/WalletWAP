@@ -1,8 +1,8 @@
 package it.walletwap.ewallet.controllers
 
-
-import com.sun.mail.iap.Response
-import it.walletwap.ewallet.JwtResponse
+import it.walletwap.ewallet.dto.JwtResponse
+import it.walletwap.ewallet.dto.RegisterForm
+import it.walletwap.ewallet.dto.SignInForm
 import it.walletwap.ewallet.dto.UserDetailsDTO
 import it.walletwap.ewallet.security.JwtUtils
 import it.walletwap.ewallet.services.UserDetailsService
@@ -32,9 +32,9 @@ class UserController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    fun registerUser(@RequestBody @Valid userDetailsDTO: UserDetailsDTO, bindingResult: BindingResult): ResponseEntity<Any> {
-        if (userDetailsDTO.password == userDetailsDTO.confirmPassword) {
-            val userDTO = userDetailsService.registerUser(userDetailsDTO)
+    fun registerUser(@RequestBody @Valid registerForm: RegisterForm, bindingResult: BindingResult): ResponseEntity<Any> {
+        if (registerForm.password == registerForm.confirmPassword) {
+            val userDTO = userDetailsService.registerUser(registerForm)
             if (bindingResult.hasErrors()){
                 return ResponseEntity.badRequest().body("Bad Request message")
             }
@@ -44,17 +44,17 @@ class UserController {
 
     @PostMapping("/signin")
     @ResponseStatus(HttpStatus.OK)
-    fun signInUser(@RequestParam(name = "username") username: String, @RequestParam(name = "password") password: String): ResponseEntity<JwtResponse>{
+    fun signInUser(@RequestBody signIn: SignInForm): ResponseEntity<JwtResponse>{
         //Perform authentication
         val authentication: Authentication = authenticationManager.authenticate(
-            UsernamePasswordAuthenticationToken(username, password)
+            UsernamePasswordAuthenticationToken(signIn.username, signIn.password)
         )
         SecurityContextHolder.getContext().authentication = authentication
         val jwt: String = jwtUtils.generateJwtToken(authentication)
         val userDetails: UserDetailsDTO = authentication.principal as UserDetailsDTO
         //Response with a JWT in order to give to the authenticated user a proof that he is authenticated (to perform request on protected path)
         return ResponseEntity
-            .ok<JwtResponse>(JwtResponse(jwt, userDetails.username, userDetails.email)
+            .ok(JwtResponse(jwt, userDetails.username, userDetails.email)
         )
     }
 
@@ -64,8 +64,8 @@ class UserController {
         name = "token",
         required = true,
         defaultValue = ""
-    ) token: String):String{
-        return userDetailsService.verifyToken(token).toString()
+    ) token: String):ResponseEntity<String>{
+        return ResponseEntity.ok(userDetailsService.verifyToken(token).toString())
     }
 
 }

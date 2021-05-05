@@ -1,9 +1,6 @@
 package it.walletwap.ewallet
 
-import it.walletwap.ewallet.domain.Customer
-import it.walletwap.ewallet.domain.Transaction
-import it.walletwap.ewallet.domain.User
-import it.walletwap.ewallet.domain.Wallet
+import it.walletwap.ewallet.domain.*
 import it.walletwap.ewallet.dto.TransactionDTO
 import it.walletwap.ewallet.repositories.CustomerRepository
 import it.walletwap.ewallet.repositories.TransactionRepository
@@ -21,7 +18,6 @@ import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.JavaMailSenderImpl
 import org.springframework.scheduling.annotation.EnableScheduling
 import java.math.BigDecimal
-import java.text.SimpleDateFormat
 import java.util.*
 import javax.mail.MessagingException
 
@@ -29,7 +25,7 @@ import javax.mail.MessagingException
 @SpringBootApplication
 @EnableScheduling
 @Configuration
-class EWalletApplication : Extensions() {
+class EWalletApplication {
     @Value("\${spring.mail.host}")
     val mailHost: String? = null
 
@@ -51,18 +47,15 @@ class EWalletApplication : Extensions() {
     @Value("\${spring.mail.properties.mail.debug}")
     val mailDebug: String? = null
 
-
     @Bean
-    fun sendMessage( ):SimpleMailMessage {
-        var message = SimpleMailMessage()
-        message.setFrom(mailUsername.toString());
+    fun sendMessage():SimpleMailMessage {
+        val message = SimpleMailMessage()
+        message.setFrom(mailUsername.toString())
         return message
-
     }
 
     @Bean
     fun getJavaMailSender(): JavaMailSender? {
-
         val mailSender = JavaMailSenderImpl()
         mailSender.host = mailHost
         mailSender.port = mailPort!!
@@ -79,104 +72,48 @@ class EWalletApplication : Extensions() {
         } catch (e: MessagingException) {
             throw e
         }
-
         return mailSender
     }
-
-    /*@Bean
-    fun passwordEncoder(): PasswordEncoder = PasswordEncoderFactories.createDelegatingPasswordEncoder()*/
 
 
     @Bean
     fun test(
         customerRepo: CustomerRepository,
         walletRepo: WalletRepository,
-        transactionRepo: TransactionRepository, userRepo: UserRepository
-    ): CommandLineRunner {
+        transactionRepo: TransactionRepository,
+        userRepo: UserRepository): CommandLineRunner {
         return CommandLineRunner {
-            val c1 =
-                Customer(name = "mirco", surname = "vigna", email = "mirco@gmail.com", deliveryAddress = "roveda 29")
-            val c2 = Customer(
-                name = "andrea",
-                surname = "vottero",
-                email = "andrea@gmail.com",
-                deliveryAddress = "roveda 29"
-            )
-            val c3 = Customer(
-                name = "martina",
-                surname = "mancinelli",
-                email = "martina@gmail.com",
-                deliveryAddress = "roveda 29"
-            )
-            val c4 =
-                Customer(name = "irene", surname = "maldera", email = "irene@gmail.com", deliveryAddress = "roveda 29")
-            val user1 = User(null, "behnam2", "pass", "behnam263@gmail.com", true, Rolename.CUSTOMER.name)
-            val c1Dto = c1.toDto()
-            val c2Dto = c2.toDto()
-            val c3Dto = c3.toDto()
+            val customerService = CustomerServiceImpl(customerRepo)
+            val walletService = WalletServiceImpl(walletRepo, customerRepo, transactionRepo)
+            val transactionService = TransactionServiceImpl(transactionRepo, walletRepo)
+            val userService = UserDetailsServiceImpl(userRepo, customerRepo)
+
+            val c1 = Customer(name = "mirco", surname = "vigna", email = "mirco@gmail.com", deliveryAddress = "roveda 29")
+            val c2 = Customer(name = "andrea", surname = "votte", email = "andrea@gmail.com", deliveryAddress = "roveda 29")
+            val c3 = Customer(name = "martina", surname = "manci", email = "martina@gmail.com", deliveryAddress = "roveda 29")
+            val c4 = Customer(name = "irene", surname = "malde", email = "irene@gmail.com", deliveryAddress = "roveda 29")
 
             customerRepo.save(c1)
             customerRepo.save(c2)
             customerRepo.save(c3)
             customerRepo.save(c4)
-            val walletService = WalletServiceImpl(walletRepo, customerRepo, transactionRepo)
+
             println(walletService.createWallet(1))
             println(walletService.createWallet(2))
             println(walletService.createWallet(3))
+            println(walletService.createWallet(4))
             val w1 = Wallet(amount = BigDecimal(100), customer = c3)
             walletRepo.save(w1)
-            val transactionService = TransactionServiceImpl(transactionRepo, walletRepo)
-            transactionService.saveTransactions(TransactionDTO(amountTransferred = BigDecimal(55), Date(), 1, 2))
-            transactionService.saveTransactions(TransactionDTO(BigDecimal(15), Date(), 1, 2))
-            transactionService.saveTransactions(TransactionDTO(BigDecimal(5), Date(), 1, 2))
-            transactionService.saveTransactions(TransactionDTO(BigDecimal(10), Date(), 1, 2))
-            transactionService.saveTransactions(TransactionDTO(BigDecimal(20), Date(), 1, 2))
+
+            transactionService.saveTransactions(TransactionDTO(BigDecimal(55), Date(), 5, 2))
+            transactionService.saveTransactions(TransactionDTO(BigDecimal(15), Date(), 5, 1))
+            transactionService.saveTransactions(TransactionDTO(BigDecimal(5), Date(), 2, 4))
+            transactionService.saveTransactions(TransactionDTO(BigDecimal(10), Date(), 1, 5))
+            transactionService.saveTransactions(TransactionDTO(BigDecimal(3), Date(), 5, 3))
             println(walletService.getWalletTransactions(1))
-            val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ITALY)
-            transactionRepo.save(
-                Transaction(
-                    null,
-                    BigDecimal(17), formatter.parse("2021-03-12 12:00:00"), walletRepo.findById(4).get(),
-                    walletRepo.findById(3).get()
-                )
-            )
-
-            transactionRepo.save(
-                Transaction(
-                    null,
-                    BigDecimal(3), formatter.parse("2021-03-21 12:00:00"), walletRepo.findById(4).get(),
-                    walletRepo.findById(3).get()
-                )
-            )
-
-            transactionRepo.save(
-                Transaction(
-                    null,
-                    BigDecimal(2),
-                    formatter.parse("2021-03-15 12:00:00"),
-                    walletRepo.findById(3).get(),
-                    walletRepo.findById(4).get()
-                )
-            )
-
-            println(walletService.transactionsByDate(1, "1615590000000", "1616540400000"))
-            val userService = UserDetailsServiceImpl(userRepo, customerRepo)
-            /*userService.addRoleName(user1, Rolename.ADMIN.name)
-            println(user1.roles)
-            userService.removeRoleName(user1, Rolename.ADMIN.name)
-            println(user1.roles)
-
-            println(userService.getRoleName(user1))
-            userService.registerUser(user1.toDto())
-            println(userService.getuserByUserName(user1.username)?.email)*/
-
-            //TODO inside bean it is difficult to access application context
-           // sendMessage(user1.email.toString(), "Testing mail sender", "Hi this is a test for mail sender")
 
         }
     }
-
-
 }
 
 

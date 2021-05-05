@@ -20,7 +20,7 @@ class NotificationServiceImpl: NotificationService {
 
         val expiryDate= Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5))
         emailVerificationTokenRepository.save(EmailVerificationToken(null,expiryDate,uuid.toString(),username))
-        println("created token: ${uuid} ")
+        println("created token: $uuid ")
          return  uuid.toString()
     }
 

@@ -26,21 +26,14 @@ interface WalletService {
     fun createWallet(customerId: Long): WalletDTO?
 
     /*
-     * Returns an ArrayList with all the Wallet in the database.
-     * Returns an empty ArrayList if no wallet is registered in the database
-     */
-    val allWallet: List<Wallet?>?
-
-    /*
      * Deletes the wallet with the given Id from the database.
      * Throws an exception in case of invalid (negative) walletId
    	 * Returns true if the wallet is deleted, false otherwise
      */
     fun deleteWallet(walletId: Long)
-    fun getAllWallets(): List<WalletDTO>?
 
     /* get transactions into and from a wallet */
     fun getWalletTransactions(walletId: Long): List<TransactionDTO>?
-    fun getWalletTransaction(walletId: Long, transactionsId: Long): TransactionDTO?
-    fun transactionsByDate(walletId: Long, startDate: String, endDate: String): List<TransactionDTO?>?
+    fun getWalletTransaction(walletId: Long, transactionId: Long): TransactionDTO?
+    fun transactionsByDate(walletId: Long, startDate: Long, endDate: Long): List<TransactionDTO>?
 }

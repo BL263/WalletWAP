@@ -6,6 +6,7 @@ import java.util.*
 data class TransactionDTO(
     var amountTransferred: BigDecimal,
     var transactionTime: Date,
-    var walletFromId: Long, var walletToId: Long
+    var walletFromId: Long,
+    var walletToId: Long
 )
 

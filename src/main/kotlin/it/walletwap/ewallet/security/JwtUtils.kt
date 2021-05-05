@@ -22,7 +22,7 @@ class JwtUtils(val userRepository: UserRepository) {
     fun generateJwtToken (authentication: Authentication): String
         {
 
-            var userPrincipal: UserDetailsDTO = authentication.principal as UserDetailsDTO
+            val userPrincipal: UserDetailsDTO = authentication.principal as UserDetailsDTO
             return Jwts.builder()
                 .setSubject((userPrincipal.username))
                 .claim("roles", userPrincipal.roles)
@@ -38,22 +38,22 @@ class JwtUtils(val userRepository: UserRepository) {
             try{
                 Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken)
             } catch (e: SignatureException) {
-                System.err.println("Invalid JWT signature: ${e.message}");
+                System.err.println("Invalid JWT signature: ${e.message}")
             } catch (e: MalformedJwtException) {
-                System.err.println("Invalid JWT token: ${e.message}" );
+                System.err.println("Invalid JWT token: ${e.message}" )
             } catch (e: ExpiredJwtException) {
-                System.err.println("JWT token is expired: ${e.message}" );
+                System.err.println("JWT token is expired: ${e.message}" )
             } catch (e: UnsupportedJwtException) {
-                System.err.println("JWT token is unsupported: ${e.message}" );
+                System.err.println("JWT token is unsupported: ${e.message}" )
             } catch (e: IllegalArgumentException) {
-                System.err.println("JWT claims string is empty: ${e.message}" );
+                System.err.println("JWT claims string is empty: ${e.message}" )
             }
             return true
         }
 
     fun getDetailsFromJwtToken(authToken: String): UserDetailsDTO
     {
-        var username = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken).body.subject
+        val username = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken).body.subject
         return userRepository.findByUsername(username)!!.toDto()
     }
 }

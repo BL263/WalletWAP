@@ -23,31 +23,31 @@ class JwtAuthenticationTokenFilter: OncePerRequestFilter() {
         filterChain: FilterChain
     ) {
         try {
-            var jwt: String? = parseJwt(request);
+            val jwt: String? = parseJwt(request)
             if (jwt != null && jwtUtils.validateJwtToken(jwt)) {
-                var userDetails: UserDetails = jwtUtils.getDetailsFromJwtToken(jwt);
-                var authentication: UsernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken(
+                val userDetails: UserDetails = jwtUtils.getDetailsFromJwtToken(jwt)
+                val authentication = UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.authorities
-                );
+                )
                 authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
 
                 SecurityContextHolder.getContext().authentication = authentication
             }
         } catch (e: Exception) {
-            System.err.println("Cannot set user authentication: ${e}")
+            System.err.println("Cannot set user authentication: $e")
         }
         filterChain.doFilter(request, response)
     }
     fun parseJwt(request: HttpServletRequest ): String? {
         try{
-            var headerAuth: String = request.getHeader("Authorization")
+            val headerAuth: String = request.getHeader("Authorization")
             if (StringUtils.hasText(headerAuth) && headerAuth.startsWith("Bearer ")) {
-                return headerAuth.substring(7, headerAuth.length);
+                return headerAuth.substring(7, headerAuth.length)
             }
         } catch (e: NullPointerException){
             // None authorization header
         }
 
-        return null;
+        return null
     }
 }

@@ -5,15 +5,11 @@ import org.springframework.security.core.userdetails.UserDetails
 import javax.validation.constraints.Email
 
 class UserDetailsDTO(private var username: String,
-                     @Email  //annotation used to validating email
+                     @Email
                      var email: String,
                      private var isEnable: Boolean = false,
-                     var roles: String? = null,
+                     var roles: String = "",
                      private var password: String,
-                     var confirmPassword: String,
-                     var name: String? = null,
-                     var surname: String? = null,
-                     var address: String? = null,
                      private val authorities: MutableList<GrantedAuthority> = mutableListOf()): UserDetails{
 
     override fun getAuthorities(): MutableList<out GrantedAuthority> {

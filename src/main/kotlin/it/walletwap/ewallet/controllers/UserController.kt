@@ -32,10 +32,13 @@ class UserController {
 
     @PostMapping("/register")
     @ResponseStatus(HttpStatus.CREATED)
-    fun registerUser(@RequestBody @Valid registerForm: RegisterForm, bindingResult: BindingResult): ResponseEntity<Any> {
+    fun registerUser(
+        @RequestBody @Valid registerForm: RegisterForm,
+        bindingResult: BindingResult
+    ): ResponseEntity<Any> {
         if (registerForm.password == registerForm.confirmPassword) {
             val userDTO = userDetailsService.registerUser(registerForm)
-            if (bindingResult.hasErrors()){
+            if (bindingResult.hasErrors()) {
                 return ResponseEntity.badRequest().body("Bad Request message")
             }
             return ResponseEntity.ok(userDTO)
@@ -44,7 +47,7 @@ class UserController {
 
     @PostMapping("/signin")
     @ResponseStatus(HttpStatus.OK)
-    fun signInUser(@RequestBody signIn: SignInForm): ResponseEntity<JwtResponse>{
+    fun signInUser(@RequestBody signIn: SignInForm): ResponseEntity<JwtResponse> {
         //Perform authentication
         val authentication: Authentication = authenticationManager.authenticate(
             UsernamePasswordAuthenticationToken(signIn.username, signIn.password)
@@ -54,18 +57,39 @@ class UserController {
         val userDetails: UserDetailsDTO = authentication.principal as UserDetailsDTO
         //Response with a JWT in order to give to the authenticated user a proof that he is authenticated (to perform request on protected path)
         return ResponseEntity
-            .ok(JwtResponse(jwt, userDetails.username, userDetails.email)
-        )
+            .ok(
+                JwtResponse(jwt, userDetails.username, userDetails.email)
+            )
     }
 
     @GetMapping("/registrationConfirm")
     @ResponseStatus(HttpStatus.OK)
-    fun checkToken(@RequestParam(
-        name = "token",
-        required = true,
-        defaultValue = ""
-    ) token: String):ResponseEntity<String>{
+    fun checkToken(
+        @RequestParam(
+            name = "token",
+            required = true,
+            defaultValue = ""
+        ) token: String
+    ): ResponseEntity<String> {
         return ResponseEntity.ok(userDetailsService.verifyToken(token).toString())
+    }
+
+    @PostMapping("/enableUser")
+    fun enableUser(@RequestBody username: String) {
+        try {
+            userDetailsService.enableUser(username)
+        } catch (ex: AccessDeniedException) {
+            throw ex
+        }
+    }
+
+    @PostMapping("/disableUser")
+    fun disableUser(@RequestBody username: String) {
+        try {
+            userDetailsService.disableUser(username)
+        } catch (ex: AccessDeniedException) {
+            throw ex
+        }
     }
 
 }

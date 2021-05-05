@@ -1,5 +1,6 @@
 package it.walletwap.ewallet.security
 
+import it.walletwap.ewallet.domain.Rolename
 import it.walletwap.ewallet.services.impl.UserDetailsServiceImpl
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
@@ -49,7 +50,11 @@ class WebSecurityConfig: WebSecurityConfigurerAdapter(){
             .csrf().disable()
             .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).and()
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-            .authorizeRequests().antMatchers("/auth/**").permitAll()
+            .authorizeRequests().antMatchers("/auth/register").permitAll()
+            .antMatchers("/auth/signin").permitAll()
+            .antMatchers("/auth/registrationConfirm").permitAll()
+            .antMatchers("/auth/enableUser").hasAuthority(Rolename.ADMIN.name)
+            .antMatchers("/auth/disableUser").hasAuthority(Rolename.ADMIN.name)
             .anyRequest().authenticated()
 
 

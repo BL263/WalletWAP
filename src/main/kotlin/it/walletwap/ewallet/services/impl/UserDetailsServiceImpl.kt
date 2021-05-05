@@ -34,6 +34,17 @@ class UserDetailsServiceImpl(var userRepository: UserRepository, var customerRep
        return userRepository.findByUsername(username)
     }
 
+    override fun enableUser(username: String): Boolean? {
+        val user=getUserByUserName(username)
+        return if(user!=null)toggleIsEnableUser(user,true)
+        else false
+    }
+    override fun disableUser(username: String): Boolean? {
+        val user=getUserByUserName(username)
+        return if(user!=null)toggleIsEnableUser(user,false)
+        else false
+    }
+
     override fun toggleIsEnableUser(user: User, isEnable: Boolean): Boolean? {
         user.isEnabled = isEnable
         return user.isEnabled == isEnable

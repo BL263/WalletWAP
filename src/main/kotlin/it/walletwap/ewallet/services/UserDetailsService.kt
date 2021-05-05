@@ -20,7 +20,8 @@ interface UserDetailsService: org.springframework.security.core.userdetails.User
      * Stores the user passed as parameter in the application database
      */
     fun registerUser(registerForm: RegisterForm): UserDetailsDTO?
-
+    fun enableUser(username: String): Boolean?
+    fun disableUser(username: String): Boolean?
     fun toggleIsEnableUser(user: User, isEnable: Boolean): Boolean?
 
     override fun loadUserByUsername(username: String): UserDetailsDTO

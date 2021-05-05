@@ -1,6 +1,8 @@
 package it.walletwap.ewallet.dto
 
+import it.walletwap.ewallet.domain.Rolename
 import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.AuthorityUtils
 import org.springframework.security.core.userdetails.UserDetails
 import javax.validation.constraints.Email
 
@@ -13,7 +15,12 @@ class UserDetailsDTO(private var username: String,
                      private val authorities: MutableList<GrantedAuthority> = mutableListOf()): UserDetails{
 
     override fun getAuthorities(): MutableList<out GrantedAuthority> {
-        return this.authorities
+     return  when(roles) {
+         Rolename.ADMIN.name -> {
+             AuthorityUtils.createAuthorityList(Rolename.ADMIN.name)
+         }
+         else ->return AuthorityUtils.createAuthorityList(Rolename.CUSTOMER.name)
+     }
     }
 
     override fun getPassword(): String {

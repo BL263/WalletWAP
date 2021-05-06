@@ -8,6 +8,10 @@ import it.walletwap.ewallet.repositories.CustomerRepository
 import it.walletwap.ewallet.repositories.TransactionRepository
 import it.walletwap.ewallet.repositories.WalletRepository
 import it.walletwap.ewallet.services.WalletService
+import org.springframework.expression.spel.SpelEvaluationException
+import org.springframework.security.access.prepost.PostAuthorize
+import org.springframework.security.access.prepost.PostFilter
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -21,11 +25,16 @@ class WalletServiceImpl(
     var transactionRepository: TransactionRepository): WalletService {
 
 
+    @PostAuthorize("returnObject.customerId==authentication.principal.customerId or authentication.principal.roles.contains('ADMIN')")
     override fun getWalletById(walletId: Long): WalletDTO? {
-        return if (walletRepository.existsById(walletId)) {
-            walletRepository.findById(walletId).get().toDto()
-        } else {
-            System.err.println("Wallet does not exist")
+        return try{
+            if (walletRepository.existsById(walletId)) {
+                walletRepository.findById(walletId).get().toDto()
+            } else {
+                System.err.println("Wallet does not exist")
+                null
+            }
+        } catch(e: SpelEvaluationException){
             null
         }
 

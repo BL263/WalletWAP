@@ -17,6 +17,7 @@ import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.mail.javamail.JavaMailSenderImpl
 import org.springframework.scheduling.annotation.EnableScheduling
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import java.math.BigDecimal
 import java.util.*
 import javax.mail.MessagingException
@@ -111,6 +112,14 @@ class EWalletApplication {
             transactionService.saveTransactions(TransactionDTO(BigDecimal(10), Date(), 1, 5))
             transactionService.saveTransactions(TransactionDTO(BigDecimal(3), Date(), 5, 3))
             println(walletService.getWalletTransactions(1))
+
+
+            /*val customer = Customer(null, "mirco", "vigna", "torino", "admin@gmail.com")
+            val user = User(null, "mitchell", BCryptPasswordEncoder().encode("12345"), "admin@gmail.com", true, "ADMIN CUSTOMER", customer)
+            customerRepo.save(customer)
+            userRepo.save(user)
+            val w2 = Wallet(amount = BigDecimal(100), customer = customer)
+            walletRepo.save(w2)*/
 
         }
     }

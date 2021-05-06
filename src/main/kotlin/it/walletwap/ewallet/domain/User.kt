@@ -29,11 +29,14 @@ class User(
 
     var isEnabled: Boolean = false,
 
-    var roles: String = ""
+    var roles: String = "",
+
+    @OneToOne(targetEntity = Customer::class, cascade = [CascadeType.MERGE])
+    var customer: Customer
 ) {
     fun toDto(): UserDetailsDTO{
         val authorities: MutableList<GrantedAuthority> = getRoles().map { SimpleGrantedAuthority(it.toString()) }.toMutableList()
-        return UserDetailsDTO(username, email, isEnabled, roles, password, authorities = authorities)
+        return UserDetailsDTO(username, email, isEnabled, roles, password, customer.id!!, authorities = authorities)
     }
 
     // Functions to get, add, remove roles

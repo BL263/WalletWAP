@@ -66,10 +66,11 @@ class UserDetailsServiceImpl(var userRepository: UserRepository, var customerRep
         if(userRepository.findByUsername(registerForm.username)!=null) return null
         if(registerForm.password!=registerForm.confirmPassword) return null
 
-        val user = User(username = registerForm.username, email =registerForm.email ,isEnabled = false, password = encoder.encode(registerForm.password), roles = Rolename.CUSTOMER.toString())
-        val customer = Customer(name = registerForm.name, surname = registerForm.surname, deliveryAddress = registerForm.address, email = registerForm.email, user = user)
-        userRepository.save(user)
+        val customer = Customer(name = registerForm.name, surname = registerForm.surname, deliveryAddress = registerForm.address, email = registerForm.email)
+        val user = User(username = registerForm.username, email =registerForm.email ,isEnabled = false, password = encoder.encode(registerForm.password), roles = Rolename.CUSTOMER.toString(), customer= customer)
+
         customerRepository.save(customer)
+        userRepository.save(user)
 
         val tokenizedUrl =
             "${domainAddress}/auth/registrationConfirm?token=${notificationService.createToken(user.username)}"

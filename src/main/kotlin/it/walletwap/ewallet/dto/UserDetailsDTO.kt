@@ -13,6 +13,7 @@ class UserDetailsDTO(private var username: String,
                      private var isEnable: Boolean = false,
                      var roles: String = "",
                      private var password: String,
+                     var customerId: Long,
                      private val authorities: MutableList<GrantedAuthority> = mutableListOf()): UserDetails{
 
     override fun getAuthorities(): MutableList<out GrantedAuthority> {

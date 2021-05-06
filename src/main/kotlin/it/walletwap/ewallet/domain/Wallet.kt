@@ -30,5 +30,5 @@ class Wallet (
     var payers: MutableSet<Transaction> = mutableSetOf() ,
 )
 {
-    fun toDto(): WalletDTO = WalletDTO(this.id!!, this.amount)
+    fun toDto(): WalletDTO = WalletDTO(this.id!!, this.amount, this.customer.id!!)
 }

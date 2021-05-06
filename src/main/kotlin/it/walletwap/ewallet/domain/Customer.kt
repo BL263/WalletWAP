@@ -27,9 +27,6 @@ class Customer(
     )
     var wallet: MutableSet<Wallet> = mutableSetOf(),
 
-    @OneToOne(cascade = [CascadeType.MERGE])
-    @JoinColumn(name = "id")
-    var user: User? = null
 ) {
     fun toDto() = CustomerDTO(this.name, this.surname, this.deliveryAddress, this.email)
 }

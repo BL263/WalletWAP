@@ -2,11 +2,14 @@ package it.walletwap.ewallet.controllers
 
 import it.walletwap.ewallet.dto.TransactionDTO
 import it.walletwap.ewallet.dto.TransactionForm
+import it.walletwap.ewallet.services.CustomerService
 import it.walletwap.ewallet.services.TransactionsService
 import it.walletwap.ewallet.services.WalletService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.expression.spel.SpelEvaluationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 import java.math.BigDecimal
 import java.util.*
@@ -22,13 +25,23 @@ class WalletController {
     @Autowired
     lateinit var transactionService: TransactionsService
 
+    @Autowired
+    lateinit var customerService: CustomerService
+
+
     @PostMapping(path = ["/"])
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("authentication.principal.customerId==#customerId or authentication.principal.roles.contains('ADMIN')")
     fun addWallet(@RequestParam customerId: Long): ResponseEntity<Any> {
-        val wallet = walletService.createWallet(customerId)
-        return if(wallet != null){
-            ResponseEntity.ok(wallet)
-        } else ResponseEntity.badRequest().body("Bad Request Message")
+        return try{
+            val wallet = walletService.createWallet(customerId)
+            if(wallet != null){
+                ResponseEntity.ok(wallet)
+            } else ResponseEntity.badRequest().body("Bad Request Message")
+        } catch (e: SpelEvaluationException){
+            ResponseEntity.badRequest().body("Bad Request Message")
+        }
+
 
     }
 
@@ -43,11 +56,15 @@ class WalletController {
 
     @PostMapping("/{walletId}/transaction")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("authentication.principal.roles.contains('CUSTOMER')")
     fun createTransactionByWalletId(@PathVariable walletId: Long,@RequestBody transactionForm: TransactionForm): ResponseEntity<Any> {
-        val transactionDTO = transactionService.saveTransactions(TransactionDTO(BigDecimal(transactionForm.amount),Date(),walletId ,transactionForm.walletToId))
-        return if (transactionDTO!=null){
-            ResponseEntity.ok(transactionDTO)
-        } else ResponseEntity.badRequest().body("Bad Request Message")
+        if (walletService.getWalletById(walletId)!==null){
+            val transactionDTO = transactionService.saveTransactions(TransactionDTO(BigDecimal(transactionForm.amount),Date(),walletId ,transactionForm.walletToId))
+            if (transactionDTO!=null){
+                return ResponseEntity.ok(transactionDTO)
+            }
+            }
+            return ResponseEntity.badRequest().body("Bad Request Message")
     }
 
     @GetMapping("/{walletId}/transactions")
@@ -65,21 +82,23 @@ class WalletController {
             defaultValue = "1617975717827"
         ) dateTo: Long
     ): ResponseEntity<Any> {
-        val list = walletService.transactionsByDate(walletId, dateFrom, dateTo)
-        return if (list!=null){
-            ResponseEntity.ok(list)
-        } else ResponseEntity.badRequest().body("Bad Request Message")
-
+        if (walletService.getWalletById(walletId)!==null){
+            val list = walletService.transactionsByDate(walletId, dateFrom, dateTo)
+            return if (list!=null){
+                ResponseEntity.ok(list)
+            } else ResponseEntity.badRequest().body("Bad Request Message")
+        } else return ResponseEntity.badRequest().body("Bad Request Message")
 
     }
 
     @GetMapping("/{walletId}/transactions/{transactionId}")
     @ResponseStatus(HttpStatus.OK)
     fun transactionByTransactionID(@PathVariable walletId: Long, @PathVariable transactionId: Long): ResponseEntity<Any> {
-        val transaction = walletService.getWalletTransaction(walletId, transactionId)
-        return if (transaction!=null){
-            ResponseEntity.ok(transaction)
-        } else ResponseEntity.badRequest().body("Bad Request Message")
+        if (walletService.getWalletById(walletId)!==null){
+            val transaction = walletService.getWalletTransaction(walletId, transactionId)
+            return if (transaction!=null){
+                ResponseEntity.ok(transaction)
+            } else ResponseEntity.badRequest().body("Bad Request Message")
+        }else return ResponseEntity.badRequest().body("Bad Request Message")
     }
-
 }

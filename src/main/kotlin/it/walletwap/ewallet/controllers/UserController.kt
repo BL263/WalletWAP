@@ -75,7 +75,7 @@ class UserController {
     }
 
     @PostMapping("/enableUser")
-    fun enableUser(@RequestBody username: String) {
+    fun enableUser(@RequestParam(name = "username") username: String) {
         try {
             userDetailsService.enableUser(username)
         } catch (ex: AccessDeniedException) {
@@ -84,7 +84,7 @@ class UserController {
     }
 
     @PostMapping("/disableUser")
-    fun disableUser(@RequestBody username: String) {
+    fun disableUser(@RequestParam(name = "username") username: String) {
         try {
             userDetailsService.disableUser(username)
         } catch (ex: AccessDeniedException) {

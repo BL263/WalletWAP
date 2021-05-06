@@ -47,6 +47,7 @@ class UserDetailsServiceImpl(var userRepository: UserRepository, var customerRep
 
     override fun toggleIsEnableUser(user: User, isEnable: Boolean): Boolean? {
         user.isEnabled = isEnable
+        userRepository.save(user)
         return user.isEnabled == isEnable
     }
 
